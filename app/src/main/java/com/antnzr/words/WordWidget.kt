@@ -44,10 +44,11 @@ private fun updateAppWidget(
     appWidgetManager: AppWidgetManager,
     appWidgetId: Int
 ) {
-    val views = RemoteViews(context.packageName, R.layout.word_widget)
-
-    views.setOnClickPendingIntent(R.id.word, changeWordPendingIntent(appWidgetId, context))
-    views.setTextViewText(R.id.word, randomWordsPair(context))
+    val views: RemoteViews = RemoteViews(context.packageName, R.layout.word_widget)
+        .apply {
+            setOnClickPendingIntent(R.id.word, changeWordPendingIntent(appWidgetId, context))
+            setTextViewText(R.id.word, randomWordsPair(context))
+        }
 
     appWidgetManager.updateAppWidget(appWidgetId, views)
 }
