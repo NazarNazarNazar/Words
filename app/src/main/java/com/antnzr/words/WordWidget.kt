@@ -20,7 +20,7 @@ class WordWidget : AppWidgetProvider() {
     ) {
         Log.d(TAG, "onUpdate: started...")
 
-        for (appWidgetId in appWidgetIds) {
+        appWidgetIds.forEach { appWidgetId ->
             updateAppWidget(context, appWidgetManager, appWidgetId)
         }
     }
@@ -33,14 +33,7 @@ class WordWidget : AppWidgetProvider() {
             && intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)
         ) {
             context?.let {
-                updateAppWidget(
-                    it,
-                    AppWidgetManager.getInstance(it),
-                    intent.getIntExtra(
-                        AppWidgetManager.EXTRA_APPWIDGET_ID,
-                        AppWidgetManager.INVALID_APPWIDGET_ID
-                    )
-                )
+                updateAppWidget(it, AppWidgetManager.getInstance(it), getIntExtra(intent))
             }
         }
     }
@@ -73,4 +66,11 @@ private fun randomWordsPair(context: Context): String {
 
     val wordPair = wordPairs[Random.nextInt(0, wordPairs.size)]
     return "${wordPair.from} : ${wordPair.to}"
+}
+
+private fun getIntExtra(intent: Intent): Int {
+    return intent.getIntExtra(
+        AppWidgetManager.EXTRA_APPWIDGET_ID,
+        AppWidgetManager.INVALID_APPWIDGET_ID
+    )
 }
