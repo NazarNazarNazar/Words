@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Words</string>
-    <string name="appwidget_text">EXAMPLE</string>
+    <string name="appwidget_example_text">Example</string>
     <string name="add_widget">Add widget</string>
-    <string name="do_not_show">Do not show</string>
+    <string name="do_not_display">Do not display</string>
+    <string name="word_detail">word_detail</string>
 </resources>
