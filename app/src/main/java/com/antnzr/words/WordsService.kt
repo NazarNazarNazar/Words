@@ -1,28 +1,33 @@
 package com.antnzr.words
 
 import android.content.Context
-import com.antnzr.words.WordPair.Companion.FROM_INDEX
-import com.antnzr.words.WordPair.Companion.TO_INDEX
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.nio.charset.Charset
+import kotlin.random.Random
 
 interface WordsService<E> {
-    fun getWords(context: Context): List<E>
+    fun getWords(context: Context): Collection<E>
+    fun getWord(context: Context): E
 }
-
-private const val TOKENS_SIZE = 4
 
 class LocalTsvWords : WordsService<WordPair> {
 
-    override fun getWords(context: Context): List<WordPair> {
+    companion object {
+        val list = linkedSetOf<WordPair>()
+    }
+
+    override fun getWords(context: Context): Collection<WordPair> {
+        if (list.size != 0) {
+            return list
+        }
+
         try {
             val inputStream: InputStream =
                 context.resources.openRawResource(R.raw.google_translate_words)
             val reader = BufferedReader(InputStreamReader(inputStream, Charset.defaultCharset()))
 
-            val list = arrayListOf<WordPair>()
             reader.forEachLine { line ->
                 val tokens = line.split("\t")
 
@@ -37,11 +42,16 @@ class LocalTsvWords : WordsService<WordPair> {
             throw RuntimeException("Something went wrong. Exception: ${exception.message}")
         }
     }
+
+    override fun getWord(context: Context): WordPair {
+        val wordPairs = getWords(context)
+
+        return wordPairs.elementAt(Random.nextInt(0, wordPairs.size))
+    }
 }
 
-data class WordPair(var from: String, var to: String) {
-    companion object {
-        const val FROM_INDEX: Int = 2
-        const val TO_INDEX: Int = 3
+data class WordPair(var from: String, var to: String, var isDisplay: Boolean = true) {
+    override fun toString(): String {
+        return "$from | $to"
     }
 }

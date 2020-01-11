@@ -1,6 +1,5 @@
 package com.antnzr.words
 
-import android.app.Activity
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
@@ -9,10 +8,7 @@ import android.content.Intent
 import android.util.Log
 import android.widget.RemoteViews
 import com.antnzr.words.WordWidget.Companion.WORD
-import kotlin.random.Random
 
-private const val DO_NOT_DISPLAY_WORD_ACTION = "do_not_display_word"
-private const val WORD_DETAILS_ACTION = "word_details_action"
 
 class WordWidget : AppWidgetProvider() {
     private val TAG = WordWidget::class.java.simpleName
@@ -48,6 +44,7 @@ class WordWidget : AppWidgetProvider() {
         if (intent?.action == DO_NOT_DISPLAY_WORD_ACTION
             && intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)
         ) {
+
             context?.let {
                 updateAppWidget(it, AppWidgetManager.getInstance(it), getIntExtra(intent))
             }
@@ -56,8 +53,6 @@ class WordWidget : AppWidgetProvider() {
         if (intent?.action == WORD_DETAILS_ACTION
             && intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)
         ) {
-            Log.d(TAG, "Word details action. intent: ${intent.getStringExtra(WORD)}")
-
             val detailsIntent = Intent(context, WordDetailsActivity::class.java)
             detailsIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, getIntExtra(intent))
             detailsIntent.putExtra(WORD, intent.getStringExtra(WORD))
@@ -73,8 +68,9 @@ private fun updateAppWidget(
     appWidgetManager: AppWidgetManager,
     appWidgetId: Int
 ) {
+    val service = LocalTsvWords()
 
-    val randomWordsPair = randomWordsPair(context)
+    val randomWordsPair = service.getWord(context)
 
     val views: RemoteViews = RemoteViews(context.packageName, R.layout.word_widget)
         .apply {
@@ -87,41 +83,34 @@ private fun updateAppWidget(
                 pendingIntent(appWidgetId, context, DO_NOT_DISPLAY_WORD_ACTION)
             )
             setOnClickPendingIntent(
-                R.id.detail_btn,
-                detailsPendingIntent(appWidgetId, context, randomWordsPair.from)
+                R.id.details_btn,
+                pendingIntent(appWidgetId, context, WORD_DETAILS_ACTION, randomWordsPair.from)
             )
-            setTextViewText(R.id.word, formatWords(randomWordsPair))
+            setOnClickPendingIntent(
+                R.id.left_btn,
+                pendingIntent(appWidgetId, context, PREVIOUS_WORD_ACTION)
+            )
+            setTextViewText(R.id.word, randomWordsPair.toString())
         }
 
     appWidgetManager.updateAppWidget(appWidgetId, views)
 }
 
-private fun detailsPendingIntent(appWidgetId: Int, context: Context, word: String): PendingIntent {
-    val intent = Intent(context, WordWidget::class.java)
-    intent.action = WORD_DETAILS_ACTION
-    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-    intent.putExtra(WORD, word)
-
-    return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-}
-
-private fun pendingIntent(appWidgetId: Int, context: Context, action: String): PendingIntent {
+private fun pendingIntent(
+    appWidgetId: Int,
+    context: Context,
+    action: String,
+    word: String = ""
+): PendingIntent {
     val intent = Intent(context, WordWidget::class.java)
     intent.action = action
     intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
 
+    if (word.isNotEmpty()) {
+        intent.putExtra(WORD, word)
+    }
+
     return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-}
-
-private fun randomWordsPair(context: Context): WordPair {
-    val service = LocalTsvWords()
-    val wordPairs = service.getWords(context)
-
-    return wordPairs[Random.nextInt(0, wordPairs.size)]
-}
-
-private fun formatWords(wordPair: WordPair): String {
-    return "${wordPair.from} : ${wordPair.to}"
 }
 
 private fun getIntExtra(intent: Intent): Int {

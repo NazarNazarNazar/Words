@@ -3,5 +3,9 @@
     <color name="colorPrimary">#607D8B</color>
     <color name="colorPrimaryTrans">#8A607D8B</color>
     <color name="colorPrimaryDark">#455A64</color>
+    <color name="colorPrimaryLight">#CFD8DC</color>
+    <color name="colorPrimaryLightTrans">#92CFD8DC</color>
     <color name="colorAccent">#FF3D00</color>
+
+    <color name="white">#FFFFFF</color>
 </resources>
