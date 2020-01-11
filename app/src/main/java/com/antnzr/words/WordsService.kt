@@ -1,9 +1,6 @@
 package com.antnzr.words
 
 import android.content.Context
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
 import java.nio.charset.Charset
 import kotlin.random.Random
 
@@ -23,24 +20,18 @@ class LocalTsvWords : WordsService<WordPair> {
             return list
         }
 
-        try {
-            val inputStream: InputStream =
-                context.resources.openRawResource(R.raw.google_translate_words)
-            val reader = BufferedReader(InputStreamReader(inputStream, Charset.defaultCharset()))
-
-            reader.forEachLine { line ->
-                val tokens = line.split("\t")
-
-                if (tokens.size == TOKENS_SIZE) {
-                    val wordPair = WordPair(tokens[FROM_INDEX], tokens[TO_INDEX])
-                    list.add(wordPair)
+        context.resources.openRawResource(R.raw.google_translate_words)
+            .bufferedReader(Charset.defaultCharset())
+            .use {
+                it.forEachLine { line ->
+                    val tokens = line.split("\t")
+                    if (tokens.size == TOKENS_SIZE) {
+                        list.add(WordPair(tokens[FROM_INDEX], tokens[TO_INDEX]))
+                    }
                 }
             }
 
-            return list
-        } catch (exception: Exception) {
-            throw RuntimeException("Something went wrong. Exception: ${exception.message}")
-        }
+        return list
     }
 
     override fun getWord(context: Context): WordPair {
