@@ -100,15 +100,13 @@ private fun pendingIntent(
     appWidgetId: Int,
     context: Context,
     action: String,
-    word: String = ""
+    word: String? = null
 ): PendingIntent {
     val intent = Intent(context, WordWidget::class.java)
     intent.action = action
     intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
 
-    if (word.isNotEmpty()) {
-        intent.putExtra(WORD, word)
-    }
+    word.let { intent.putExtra(WORD, it) }
 
     return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 }
