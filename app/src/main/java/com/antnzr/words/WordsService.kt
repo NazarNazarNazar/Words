@@ -6,7 +6,10 @@ import kotlin.random.Random
 
 interface WordsService<E> {
     fun getWords(context: Context): Collection<E>
-    fun getWord(context: Context): E
+    fun getRandomWord(context: Context): E?
+    fun getNextWord(context: Context?): E?
+    fun getPreviousWord(context: Context?): E?
+    fun saveCurrentWord(context: Context?, word: String?)
 }
 
 class LocalTsvWords : WordsService<WordPair> {
@@ -38,7 +41,7 @@ class LocalTsvWords : WordsService<WordPair> {
         }
     }
 
-    override fun getWord(context: Context): WordPair {
+    override fun getRandomWord(context: Context): WordPair? {
         val wordPairs: Collection<WordPair> = getWords(context)
         return try {
             wordPairs.elementAt(Random.nextInt(0, wordPairs.size))
@@ -46,6 +49,46 @@ class LocalTsvWords : WordsService<WordPair> {
             WordPair("", "")
         }
     }
+
+    override fun getNextWord(context: Context?): WordPair? {
+        val word = currentWordFromPref(context)
+        val words: Collection<WordPair>? = context?.let { getWords(it) }
+        val currentWordPairIndex = currentWordPairIndex(words, word)
+
+        if (words?.size == currentWordPairIndex) {
+            return words?.first()
+        }
+
+        return currentWordPairIndex(words, word)?.plus(1)?.let { words?.elementAt(it) }
+    }
+
+    override fun getPreviousWord(context: Context?): WordPair? {
+        val word = currentWordFromPref(context)
+        val words: Collection<WordPair>? = context?.let { getWords(it) }
+        val currentWordPairIndex = currentWordPairIndex(words, word)
+
+        if (currentWordPairIndex == 0) {
+            return words?.last()
+        }
+
+        return currentWordPairIndex?.minus(1)?.let { words?.elementAt(it) }
+    }
+
+    override fun saveCurrentWord(context: Context?, word: String?) {
+        val prefs = context?.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
+        val editor = prefs?.edit()
+        editor?.putString(CURRENT_WORD, word)
+        editor?.apply()
+    }
+}
+
+private fun currentWordPairIndex(words: Collection<WordPair>?, word: String?): Int? {
+    return words?.indexOfFirst { pair -> pair.from == word }
+}
+
+private fun currentWordFromPref(context: Context?): String? {
+    val prefs = context?.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
+    return prefs?.getString(CURRENT_WORD, "")
 }
 
 data class WordPair(var from: String, var to: String, var isDisplay: Boolean = true) {

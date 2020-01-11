@@ -33,32 +33,42 @@ class WordWidget : AppWidgetProvider() {
         Log.d(TAG, "onReceive: started")
         super.onReceive(context, intent)
 
-        if (intent?.action == AppWidgetManager.ACTION_APPWIDGET_UPDATE
-            && intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)
-        ) {
-            context?.let {
-                updateAppWidget(it, AppWidgetManager.getInstance(it), getIntExtra(intent))
+        intent?.let {
+            if (!intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
+                return
             }
         }
 
-        if (intent?.action == DO_NOT_DISPLAY_WORD_ACTION
-            && intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)
-        ) {
-
-            context?.let {
-                updateAppWidget(it, AppWidgetManager.getInstance(it), getIntExtra(intent))
+        when (intent?.action) {
+            NEXT_WORD_ACTION,
+            AppWidgetManager.ACTION_APPWIDGET_UPDATE -> {
+                context?.let {
+                    updateAppWidget(
+                        it,
+                        AppWidgetManager.getInstance(it),
+                        getIntExtra(intent),
+                        LocalTsvWords().getNextWord(context)
+                    )
+                }
             }
-        }
+            WORD_DETAILS_ACTION -> {
+                val detailsIntent = Intent(context, WordDetailsActivity::class.java)
+                detailsIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, getIntExtra(intent))
+                detailsIntent.putExtra(WORD, intent.getStringExtra(WORD))
+                detailsIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
-        if (intent?.action == WORD_DETAILS_ACTION
-            && intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)
-        ) {
-            val detailsIntent = Intent(context, WordDetailsActivity::class.java)
-            detailsIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, getIntExtra(intent))
-            detailsIntent.putExtra(WORD, intent.getStringExtra(WORD))
-            detailsIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-
-            context?.startActivity(detailsIntent)
+                context?.startActivity(detailsIntent)
+            }
+            PREVIOUS_WORD_ACTION -> {
+                context?.let {
+                    updateAppWidget(
+                        it,
+                        AppWidgetManager.getInstance(it),
+                        getIntExtra(intent),
+                        LocalTsvWords().getPreviousWord(it)
+                    )
+                }
+            }
         }
     }
 }
@@ -66,11 +76,16 @@ class WordWidget : AppWidgetProvider() {
 private fun updateAppWidget(
     context: Context,
     appWidgetManager: AppWidgetManager,
-    appWidgetId: Int
+    appWidgetId: Int,
+    wordPair: WordPair? = null
 ) {
     val service = LocalTsvWords()
 
-    val randomWordsPair = service.getWord(context)
+    val currentWordPair: WordPair? = wordPair
+        .let { it }
+        ?: service.getRandomWord(context)
+
+    service.saveCurrentWord(context, currentWordPair?.from)
 
     val views: RemoteViews = RemoteViews(context.packageName, R.layout.word_widget)
         .apply {
@@ -84,13 +99,17 @@ private fun updateAppWidget(
             )
             setOnClickPendingIntent(
                 R.id.details_btn,
-                pendingIntent(appWidgetId, context, WORD_DETAILS_ACTION, randomWordsPair.from)
+                pendingIntent(appWidgetId, context, WORD_DETAILS_ACTION, currentWordPair?.from)
             )
             setOnClickPendingIntent(
                 R.id.left_btn,
                 pendingIntent(appWidgetId, context, PREVIOUS_WORD_ACTION)
             )
-            setTextViewText(R.id.word, randomWordsPair.toString())
+            setOnClickPendingIntent(
+                R.id.right_btn,
+                pendingIntent(appWidgetId, context, NEXT_WORD_ACTION)
+            )
+            setTextViewText(R.id.word, currentWordPair?.toString())
         }
 
     appWidgetManager.updateAppWidget(appWidgetId, views)

@@ -9,3 +9,6 @@ const val TOKENS_SIZE = 4
 
 const val FROM_INDEX: Int = 2
 const val TO_INDEX: Int = 3
+
+const val SHARED_PREF: String = "prefs"
+const val CURRENT_WORD = "currentWord"
