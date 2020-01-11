@@ -12,32 +12,39 @@ interface WordsService<E> {
 class LocalTsvWords : WordsService<WordPair> {
 
     companion object {
-        val list = linkedSetOf<WordPair>()
+        val wordPairs = linkedSetOf<WordPair>()
     }
 
     override fun getWords(context: Context): Collection<WordPair> {
-        if (list.size != 0) {
-            return list
+        if (wordPairs.size != 0) {
+            return wordPairs
         }
 
-        context.resources.openRawResource(R.raw.google_translate_words)
-            .bufferedReader(Charset.defaultCharset())
-            .use {
-                it.forEachLine { line ->
-                    val tokens = line.split("\t")
-                    if (tokens.size == TOKENS_SIZE) {
-                        list.add(WordPair(tokens[FROM_INDEX], tokens[TO_INDEX]))
+        try {
+            context.resources.openRawResource(R.raw.google_translate_words)
+                .bufferedReader(Charset.defaultCharset())
+                .use {
+                    it.forEachLine { line ->
+                        val tokens = line.split("\t")
+                        if (tokens.size == TOKENS_SIZE) {
+                            wordPairs.add(WordPair(tokens[FROM_INDEX], tokens[TO_INDEX]))
+                        }
                     }
                 }
-            }
 
-        return list
+            return wordPairs
+        } catch (exception: Exception) {
+            return emptySet()
+        }
     }
 
     override fun getWord(context: Context): WordPair {
-        val wordPairs = getWords(context)
-
-        return wordPairs.elementAt(Random.nextInt(0, wordPairs.size))
+        val wordPairs: Collection<WordPair> = getWords(context)
+        return try {
+            wordPairs.elementAt(Random.nextInt(0, wordPairs.size))
+        } catch (exception: Exception) {
+            WordPair("", "")
+        }
     }
 }
 
