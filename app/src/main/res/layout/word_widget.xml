@@ -24,7 +24,7 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:maxLines="4"
+            android:maxLines="3"
             android:text="@string/appwidget_example_text"
             android:textColor="#ffffff"
             android:textSize="18sp"
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/word_detail"
             android:src="@drawable/ic_details" />
 
@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/left_arrow"
             android:src="@drawable/ic_left" />
 
@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/right_arrow"
             android:src="@drawable/ic_right" />
 
@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/settings"
             android:src="@drawable/ic_settings" />
 
@@ -99,7 +99,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/do_not_display"
             android:src="@drawable/ic_do_not_display" />
 

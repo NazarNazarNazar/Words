@@ -10,6 +10,7 @@ interface WordsService<E> {
     fun getNextWord(context: Context?): E?
     fun getPreviousWord(context: Context?): E?
     fun saveCurrentWord(context: Context?, word: String?)
+    fun getCurrentWord(context: Context?): E?
 }
 
 class LocalTsvWords : WordsService<WordPair> {
@@ -51,21 +52,19 @@ class LocalTsvWords : WordsService<WordPair> {
     }
 
     override fun getNextWord(context: Context?): WordPair? {
-        val word = currentWordFromPref(context)
         val words: Collection<WordPair>? = context?.let { getWords(it) }
-        val currentWordPairIndex = currentWordPairIndex(words, word)
+        val currentWordPairIndex = currentWordPairIndex(words, currentWordFromPref(context))
 
         if (words?.size == currentWordPairIndex) {
             return words?.first()
         }
 
-        return currentWordPairIndex(words, word)?.plus(1)?.let { words?.elementAt(it) }
+        return currentWordPairIndex?.plus(1)?.let { words?.elementAt(it) }
     }
 
     override fun getPreviousWord(context: Context?): WordPair? {
-        val word = currentWordFromPref(context)
         val words: Collection<WordPair>? = context?.let { getWords(it) }
-        val currentWordPairIndex = currentWordPairIndex(words, word)
+        val currentWordPairIndex = currentWordPairIndex(words, currentWordFromPref(context))
 
         if (currentWordPairIndex == 0) {
             return words?.last()
@@ -77,8 +76,15 @@ class LocalTsvWords : WordsService<WordPair> {
     override fun saveCurrentWord(context: Context?, word: String?) {
         val prefs = context?.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
         val editor = prefs?.edit()
+
         editor?.putString(CURRENT_WORD, word)
         editor?.apply()
+    }
+
+    override fun getCurrentWord(context: Context?): WordPair? {
+        val words: Collection<WordPair>? = context?.let { getWords(it) }
+
+        return words?.first { wordPair -> wordPair.from == currentWordFromPref(context) }
     }
 }
 

@@ -7,15 +7,12 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.RemoteViews
-import com.antnzr.words.WordWidget.Companion.WORD
 
 
 class WordWidget : AppWidgetProvider() {
     private val TAG = WordWidget::class.java.simpleName
 
-    companion object {
-        const val WORD = "word"
-    }
+    var service = LocalTsvWords()
 
     override fun onUpdate(
         context: Context,
@@ -25,7 +22,7 @@ class WordWidget : AppWidgetProvider() {
         Log.d(TAG, "onUpdate: started...")
 
         appWidgetIds.forEach { appWidgetId ->
-            updateAppWidget(context, appWidgetManager, appWidgetId)
+            updateAppWidget(context, appWidgetId, service.getCurrentWord(context))
         }
     }
 
@@ -45,29 +42,27 @@ class WordWidget : AppWidgetProvider() {
                 context?.let {
                     updateAppWidget(
                         it,
-                        AppWidgetManager.getInstance(it),
                         getIntExtra(intent),
-                        LocalTsvWords().getNextWord(context)
+                        service.getNextWord(context)
+                    )
+                }
+            }
+            PREVIOUS_WORD_ACTION -> {
+                context?.let {
+                    updateAppWidget(
+                        it,
+                        getIntExtra(intent),
+                        service.getPreviousWord(it)
                     )
                 }
             }
             WORD_DETAILS_ACTION -> {
                 val detailsIntent = Intent(context, WordDetailsActivity::class.java)
                 detailsIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, getIntExtra(intent))
-                detailsIntent.putExtra(WORD, intent.getStringExtra(WORD))
+                detailsIntent.putExtra(CURRENT_WORD, intent.getStringExtra(CURRENT_WORD))
                 detailsIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
                 context?.startActivity(detailsIntent)
-            }
-            PREVIOUS_WORD_ACTION -> {
-                context?.let {
-                    updateAppWidget(
-                        it,
-                        AppWidgetManager.getInstance(it),
-                        getIntExtra(intent),
-                        LocalTsvWords().getPreviousWord(it)
-                    )
-                }
             }
         }
     }
@@ -75,7 +70,6 @@ class WordWidget : AppWidgetProvider() {
 
 private fun updateAppWidget(
     context: Context,
-    appWidgetManager: AppWidgetManager,
     appWidgetId: Int,
     wordPair: WordPair? = null
 ) {
@@ -90,14 +84,6 @@ private fun updateAppWidget(
     val views: RemoteViews = RemoteViews(context.packageName, R.layout.word_widget)
         .apply {
             setOnClickPendingIntent(
-                R.id.word,
-                pendingIntent(appWidgetId, context, AppWidgetManager.ACTION_APPWIDGET_UPDATE)
-            )
-            setOnClickPendingIntent(
-                R.id.do_not_display_btn,
-                pendingIntent(appWidgetId, context, DO_NOT_DISPLAY_WORD_ACTION)
-            )
-            setOnClickPendingIntent(
                 R.id.details_btn,
                 pendingIntent(appWidgetId, context, WORD_DETAILS_ACTION, currentWordPair?.from)
             )
@@ -109,10 +95,18 @@ private fun updateAppWidget(
                 R.id.right_btn,
                 pendingIntent(appWidgetId, context, NEXT_WORD_ACTION)
             )
+            setOnClickPendingIntent(
+                R.id.do_not_display_btn,
+                pendingIntent(appWidgetId, context, DO_NOT_DISPLAY_WORD_ACTION)
+            )
+            setOnClickPendingIntent(
+                R.id.word,
+                pendingIntent(appWidgetId, context, AppWidgetManager.ACTION_APPWIDGET_UPDATE)
+            )
             setTextViewText(R.id.word, currentWordPair?.toString())
         }
 
-    appWidgetManager.updateAppWidget(appWidgetId, views)
+    AppWidgetManager.getInstance(context).updateAppWidget(appWidgetId, views)
 }
 
 private fun pendingIntent(
@@ -125,7 +119,7 @@ private fun pendingIntent(
     intent.action = action
     intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
 
-    word.let { intent.putExtra(WORD, it) }
+    word.let { intent.putExtra(CURRENT_WORD, it) }
 
     return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 }

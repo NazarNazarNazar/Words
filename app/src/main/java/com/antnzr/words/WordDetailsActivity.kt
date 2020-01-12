@@ -29,8 +29,8 @@ class WordDetailsActivity : AppCompatActivity() {
         wordWebView = findViewById(R.id.word_web_view)
         prepareWebView(wordWebView, spinner as ProgressBar)
 
-        if (intent.hasExtra(WordWidget.WORD)) {
-            val word = intent.getStringExtra(WordWidget.WORD)
+        if (intent.hasExtra(CURRENT_WORD)) {
+            val word = intent.getStringExtra(CURRENT_WORD)
             wordWebView?.loadUrl(url + word)
         }
     }
