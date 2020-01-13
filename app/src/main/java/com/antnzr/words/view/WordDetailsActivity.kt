@@ -1,4 +1,4 @@
-package com.antnzr.words
+package com.antnzr.words.view
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -8,6 +8,8 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import com.antnzr.words.R
+import com.antnzr.words.utils.CURRENT_WORD
 
 
 class WordDetailsActivity : AppCompatActivity() {

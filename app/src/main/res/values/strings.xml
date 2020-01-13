@@ -8,6 +8,8 @@
     <string name="word_detail">word_detail</string>
     <string name="left_arrow">left_arrow</string>
     <string name="right_arrow">right_arrow</string>
-    <string name="settings">settings</string>
+    <string name="list">list</string>
     <string name="divider">divider</string>
+
+    <string name="word_list">%1$s | %2$s</string>
 </resources>

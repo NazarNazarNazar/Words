@@ -20,7 +20,7 @@
             android:id="@+id/word"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
@@ -85,14 +85,14 @@
             android:src="@drawable/ic_right" />
 
         <ImageButton
-            android:id="@+id/settings_btn"
+            android:id="@+id/list_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
             android:background="?android:attr/selectableItemBackground"
-            android:contentDescription="@string/settings"
-            android:src="@drawable/ic_settings" />
+            android:contentDescription="@string/list"
+            android:src="@drawable/ic_list" />
 
         <ImageButton
             android:id="@+id/do_not_display_btn"

@@ -1,6 +1,7 @@
 package com.antnzr.words
 
 import android.content.Context
+import com.antnzr.words.utils.*
 import java.nio.charset.Charset
 import kotlin.random.Random
 
@@ -84,7 +85,7 @@ class LocalTsvWords : WordsService<WordPair> {
     override fun getCurrentWord(context: Context?): WordPair? {
         val words: Collection<WordPair>? = context?.let { getWords(it) }
 
-        return words?.first { wordPair -> wordPair.from == currentWordFromPref(context) }
+        return words?.firstOrNull { wordPair -> wordPair.from == currentWordFromPref(context) }
     }
 }
 

@@ -1,7 +1,8 @@
-package com.antnzr.words
+package com.antnzr.words.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.antnzr.words.R
 
 class MainActivity : AppCompatActivity() {
 
