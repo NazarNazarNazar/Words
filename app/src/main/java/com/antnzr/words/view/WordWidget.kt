@@ -7,9 +7,9 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.RemoteViews
-import com.antnzr.words.LocalTsvWords
+import com.antnzr.words.data.LocalTsvWords
 import com.antnzr.words.R
-import com.antnzr.words.WordPair
+import com.antnzr.words.data.WordPair
 import com.antnzr.words.utils.*
 
 

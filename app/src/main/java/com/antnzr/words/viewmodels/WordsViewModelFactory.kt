@@ -1,7 +1,8 @@
-package com.antnzr.words
+package com.antnzr.words.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.antnzr.words.data.LocalTsvWords
 
 class WordsViewModelFactory(
     private val service: LocalTsvWords

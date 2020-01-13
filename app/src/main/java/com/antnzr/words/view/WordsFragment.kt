@@ -1,7 +1,6 @@
 package com.antnzr.words.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.antnzr.words.*
-import com.antnzr.words.utils.WordAdapter
+import com.antnzr.words.R
+import com.antnzr.words.adapters.WordAdapter
+import com.antnzr.words.data.LocalTsvWords
+import com.antnzr.words.viewmodels.WordsViewModel
+import com.antnzr.words.viewmodels.WordsViewModelFactory
 import kotlinx.android.synthetic.main.words_fragment.*
 
 
@@ -24,8 +26,11 @@ class WordsFragment : Fragment() {
     private lateinit var viewModelFactory: WordsViewModelFactory
     private lateinit var viewModel: WordsViewModel
 
+    private val service = LocalTsvWords()
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.words_fragment, container, false)
@@ -33,7 +38,6 @@ class WordsFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        Log.d(TAG, "onActivityCreated: started")
 
         viewModelFactory =
             WordsViewModelFactory(LocalTsvWords())
@@ -48,6 +52,9 @@ class WordsFragment : Fragment() {
                 it.layoutManager = LinearLayoutManager(requireContext())
                 it.setHasFixedSize(true)
                 it.adapter = WordAdapter(words)
+                it.layoutManager?.scrollToPosition(
+                    words.indexOf(service.getCurrentWord(context))
+                )
             }
         })
     }

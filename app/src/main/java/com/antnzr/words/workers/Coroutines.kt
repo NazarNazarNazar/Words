@@ -1,4 +1,4 @@
-package com.antnzr.words.utils
+package com.antnzr.words.workers
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

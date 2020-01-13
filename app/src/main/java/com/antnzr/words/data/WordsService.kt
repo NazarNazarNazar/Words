@@ -1,6 +1,7 @@
-package com.antnzr.words
+package com.antnzr.words.data
 
 import android.content.Context
+import com.antnzr.words.R
 import com.antnzr.words.utils.*
 import java.nio.charset.Charset
 import kotlin.random.Random
@@ -14,7 +15,8 @@ interface WordsService<E> {
     fun getCurrentWord(context: Context?): E?
 }
 
-class LocalTsvWords : WordsService<WordPair> {
+class LocalTsvWords :
+    WordsService<WordPair> {
 
     companion object {
         val wordPairs = linkedSetOf<WordPair>()
@@ -32,12 +34,17 @@ class LocalTsvWords : WordsService<WordPair> {
                     it.forEachLine { line ->
                         val tokens = line.split("\t")
                         if (tokens.size == TOKENS_SIZE) {
-                            wordPairs.add(WordPair(tokens[FROM_INDEX], tokens[TO_INDEX]))
+                            wordPairs.add(
+                                WordPair(
+                                    tokens[FROM_INDEX],
+                                    tokens[TO_INDEX]
+                                )
+                            )
                         }
                     }
                 }
 
-            return wordPairs
+            return wordPairs.reversed()
         } catch (exception: Exception) {
             return emptySet()
         }
@@ -54,7 +61,10 @@ class LocalTsvWords : WordsService<WordPair> {
 
     override fun getNextWord(context: Context?): WordPair? {
         val words: Collection<WordPair>? = context?.let { getWords(it) }
-        val currentWordPairIndex = currentWordPairIndex(words, currentWordFromPref(context))
+        val currentWordPairIndex = currentWordPairIndex(
+            words,
+            currentWordFromPref(context)
+        )
 
         if (words?.size == currentWordPairIndex) {
             return words?.first()
@@ -65,7 +75,10 @@ class LocalTsvWords : WordsService<WordPair> {
 
     override fun getPreviousWord(context: Context?): WordPair? {
         val words: Collection<WordPair>? = context?.let { getWords(it) }
-        val currentWordPairIndex = currentWordPairIndex(words, currentWordFromPref(context))
+        val currentWordPairIndex = currentWordPairIndex(
+            words,
+            currentWordFromPref(context)
+        )
 
         if (currentWordPairIndex == 0) {
             return words?.last()
@@ -85,7 +98,10 @@ class LocalTsvWords : WordsService<WordPair> {
     override fun getCurrentWord(context: Context?): WordPair? {
         val words: Collection<WordPair>? = context?.let { getWords(it) }
 
-        return words?.firstOrNull { wordPair -> wordPair.from == currentWordFromPref(context) }
+        return words?.firstOrNull { wordPair -> wordPair.from == currentWordFromPref(
+            context
+        )
+        }
     }
 }
 

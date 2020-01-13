@@ -1,9 +1,12 @@
-package com.antnzr.words
+package com.antnzr.words.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.antnzr.words.utils.Coroutines
+import com.antnzr.words.data.LocalTsvWords
+import com.antnzr.words.MainApplication
+import com.antnzr.words.data.WordPair
+import com.antnzr.words.workers.Coroutines
 import kotlinx.coroutines.Job
 
 class WordsViewModel(
@@ -18,7 +21,7 @@ class WordsViewModel(
 
     fun getWords() {
         job = Coroutines.ioThenMain(
-            { service.getWords(MainApplication.applicationContext().applicationContext) },
+            { service.getWords(MainApplication.applicationContext()) },
             { _words.value = it }
         )
     }
