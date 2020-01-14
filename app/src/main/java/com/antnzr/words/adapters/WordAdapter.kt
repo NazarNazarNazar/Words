@@ -10,7 +10,8 @@ import com.antnzr.words.data.LocalTsvWordsRepository
 import com.antnzr.words.data.WordPair
 
 class WordAdapter(
-    private val words: Collection<WordPair>
+    private val words: Collection<WordPair>,
+    private val listener: RecyclerViewClickListener
 ) : RecyclerView.Adapter<WordAdapter.WordsViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordsViewHolder {
@@ -24,7 +25,6 @@ class WordAdapter(
     }
 
     override fun onBindViewHolder(holder: WordsViewHolder, position: Int) {
-
         val context = holder.itemView.context
 
         holder.wordTextView.text = context.getString(
@@ -38,15 +38,15 @@ class WordAdapter(
         } else {
             holder.wordTextView.setTextColor(context.getColor(R.color.colorPrimaryDark))
         }
+
+        holder.wordTextView.setOnClickListener {
+            listener.onClick(holder.wordTextView, words.elementAt(position))
+        }
     }
 
-    override fun getItemCount(): Int {
-        return words.size
-    }
+    override fun getItemCount() = words.size
 
-    inner class WordsViewHolder(
-        view: View
-    ) : RecyclerView.ViewHolder(view) {
+    inner class WordsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val wordTextView: TextView = view.findViewById(R.id.word)
     }
 }

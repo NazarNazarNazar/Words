@@ -3,6 +3,7 @@ package com.antnzr.words.view
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -16,7 +17,7 @@ import com.antnzr.words.utils.*
 class WordWidget : AppWidgetProvider() {
     private val TAG = WordWidget::class.java.simpleName
 
-    var repository = LocalTsvWordsRepository()
+    private var repository = LocalTsvWordsRepository()
 
     override fun onUpdate(
         context: Context,
@@ -169,4 +170,17 @@ private fun getIntExtra(intent: Intent): Int {
 
 private fun formatWordPair(wordPair: WordPair?): String {
     return "${wordPair?.from} | ${wordPair?.to}"
+}
+
+
+fun updateWordWidget(context: Context?) {
+    context?.let {
+        val widgetManager = AppWidgetManager.getInstance(it)
+        val ids: IntArray = widgetManager.getAppWidgetIds(
+            ComponentName(it, WordWidget::class.java)
+        )
+
+        val widget = WordWidget()
+        widget.onUpdate(it, widgetManager, ids)
+    }
 }
