@@ -52,54 +52,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/divider"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="5.0">
 
         <ImageButton
             android:id="@+id/details_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:contentDescription="@string/word_detail"
+            style="@style/WidgetImageButton"
+            android:contentDescription="@string/word_details"
             android:src="@drawable/ic_details" />
 
         <ImageButton
             android:id="@+id/left_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
+            style="@style/WidgetImageButton"
             android:contentDescription="@string/left_arrow"
             android:src="@drawable/ic_left" />
 
         <ImageButton
             android:id="@+id/right_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
+            style="@style/WidgetImageButton"
             android:contentDescription="@string/right_arrow"
             android:src="@drawable/ic_right" />
 
         <ImageButton
             android:id="@+id/list_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
+            style="@style/WidgetImageButton"
             android:contentDescription="@string/list"
             android:src="@drawable/ic_list" />
 
         <ImageButton
             android:id="@+id/do_not_display_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
+            style="@style/WidgetImageButton"
             android:contentDescription="@string/do_not_display"
             android:src="@drawable/ic_do_not_display" />
 

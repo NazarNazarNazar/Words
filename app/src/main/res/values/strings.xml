@@ -5,11 +5,11 @@
 
     <!--    widget buttons-->
     <string name="do_not_display">Do not display</string>
-    <string name="word_detail">word_detail</string>
-    <string name="left_arrow">left_arrow</string>
-    <string name="right_arrow">right_arrow</string>
-    <string name="list">list</string>
-    <string name="divider">divider</string>
+    <string name="word_details">Word_details</string>
+    <string name="left_arrow">Left_arrow</string>
+    <string name="right_arrow">Right_arrow</string>
+    <string name="list">List</string>
+    <string name="divider">Divider</string>
 
     <string name="word_list">%1$s | %2$s</string>
 </resources>
