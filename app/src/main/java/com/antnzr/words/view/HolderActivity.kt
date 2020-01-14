@@ -1,14 +1,13 @@
 package com.antnzr.words.view
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.antnzr.words.R
 
 class HolderActivity : AppCompatActivity() {
 
     private val fragmentManager = supportFragmentManager
-    private val listFragment =
-        WordsFragment.newInstance()
+    private val listFragment = WordsFragment.newInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

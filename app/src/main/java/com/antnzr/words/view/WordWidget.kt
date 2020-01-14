@@ -7,8 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.RemoteViews
-import com.antnzr.words.data.LocalTsvWords
 import com.antnzr.words.R
+import com.antnzr.words.data.LocalTsvWordsRepository
 import com.antnzr.words.data.WordPair
 import com.antnzr.words.utils.*
 
@@ -16,7 +16,7 @@ import com.antnzr.words.utils.*
 class WordWidget : AppWidgetProvider() {
     private val TAG = WordWidget::class.java.simpleName
 
-    var service = LocalTsvWords()
+    var repository = LocalTsvWordsRepository()
 
     override fun onUpdate(
         context: Context,
@@ -26,7 +26,7 @@ class WordWidget : AppWidgetProvider() {
         Log.d(TAG, "onUpdate: started...")
 
         appWidgetIds.forEach { appWidgetId ->
-            updateAppWidget(context, appWidgetId, service.getCurrentWord(context))
+            updateAppWidget(context, appWidgetId, repository.getCurrentWord(context))
         }
     }
 
@@ -55,7 +55,7 @@ class WordWidget : AppWidgetProvider() {
                     updateAppWidget(
                         it,
                         getIntExtra(intent),
-                        service.getNextWord(context)
+                        repository.getNextWord(context)
                     )
                 }
             }
@@ -64,7 +64,7 @@ class WordWidget : AppWidgetProvider() {
                     updateAppWidget(
                         it,
                         getIntExtra(intent),
-                        service.getPreviousWord(it)
+                        repository.getPreviousWord(it)
                     )
                 }
             }
@@ -86,9 +86,9 @@ class WordWidget : AppWidgetProvider() {
     ) {
         val currentWordPair: WordPair? = wordPair
             .let { it }
-            ?: service.getRandomWord(context)
+            ?: repository.getRandomWord(context)
 
-        service.saveCurrentWord(context, currentWordPair?.from)
+        repository.saveCurrentWord(context, currentWordPair?.from)
 
         val views: RemoteViews = RemoteViews(
             context.packageName,
@@ -138,7 +138,7 @@ class WordWidget : AppWidgetProvider() {
                         AppWidgetManager.ACTION_APPWIDGET_UPDATE
                     )
                 )
-                setTextViewText(R.id.word, currentWordPair?.toString())
+                setTextViewText(R.id.word, formatWordPair(currentWordPair))
             }
 
         AppWidgetManager.getInstance(context).updateAppWidget(appWidgetId, views)
@@ -165,4 +165,8 @@ private fun getIntExtra(intent: Intent): Int {
         AppWidgetManager.EXTRA_APPWIDGET_ID,
         AppWidgetManager.INVALID_APPWIDGET_ID
     )
+}
+
+private fun formatWordPair(wordPair: WordPair?): String {
+    return "${wordPair?.from} | ${wordPair?.to}"
 }

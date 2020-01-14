@@ -6,7 +6,7 @@ import com.antnzr.words.utils.*
 import java.nio.charset.Charset
 import kotlin.random.Random
 
-interface WordsService<E> {
+interface WordRepository<E> {
     fun getWords(context: Context): Collection<E>
     fun getRandomWord(context: Context): E?
     fun getNextWord(context: Context?): E?
@@ -15,8 +15,8 @@ interface WordsService<E> {
     fun getCurrentWord(context: Context?): E?
 }
 
-class LocalTsvWords :
-    WordsService<WordPair> {
+class LocalTsvWordsRepository :
+    WordRepository<WordPair> {
 
     companion object {
         val wordPairs = linkedSetOf<WordPair>()
@@ -98,9 +98,8 @@ class LocalTsvWords :
     override fun getCurrentWord(context: Context?): WordPair? {
         val words: Collection<WordPair>? = context?.let { getWords(it) }
 
-        return words?.firstOrNull { wordPair -> wordPair.from == currentWordFromPref(
-            context
-        )
+        return words?.firstOrNull { wordPair ->
+            wordPair.from == currentWordFromPref(context)
         }
     }
 }
@@ -114,8 +113,4 @@ private fun currentWordFromPref(context: Context?): String? {
     return prefs?.getString(CURRENT_WORD, "")
 }
 
-data class WordPair(var from: String, var to: String, var isDisplay: Boolean = true) {
-    override fun toString(): String {
-        return "$from | $to"
-    }
-}
+data class WordPair(var from: String, var to: String, var isDisplay: Boolean = true)

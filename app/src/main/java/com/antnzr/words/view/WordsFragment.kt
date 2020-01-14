@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.antnzr.words.R
 import com.antnzr.words.adapters.WordAdapter
-import com.antnzr.words.data.LocalTsvWords
+import com.antnzr.words.data.LocalTsvWordsRepository
 import com.antnzr.words.viewmodels.WordsViewModel
 import com.antnzr.words.viewmodels.WordsViewModelFactory
 import kotlinx.android.synthetic.main.words_fragment.*
@@ -26,7 +26,7 @@ class WordsFragment : Fragment() {
     private lateinit var viewModelFactory: WordsViewModelFactory
     private lateinit var viewModel: WordsViewModel
 
-    private val service = LocalTsvWords()
+    private val repository = LocalTsvWordsRepository()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,8 +39,7 @@ class WordsFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModelFactory =
-            WordsViewModelFactory(LocalTsvWords())
+        viewModelFactory = WordsViewModelFactory(repository)
         viewModel = ViewModelProviders
             .of(this, viewModelFactory)
             .get(WordsViewModel::class.java)
@@ -53,7 +52,7 @@ class WordsFragment : Fragment() {
                 it.setHasFixedSize(true)
                 it.adapter = WordAdapter(words)
                 it.layoutManager?.scrollToPosition(
-                    words.indexOf(service.getCurrentWord(context))
+                    words.indexOf(repository.getCurrentWord(context))
                 )
             }
         })

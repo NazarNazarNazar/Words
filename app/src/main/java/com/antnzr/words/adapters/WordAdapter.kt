@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.antnzr.words.R
-import com.antnzr.words.data.LocalTsvWords
+import com.antnzr.words.data.LocalTsvWordsRepository
 import com.antnzr.words.data.WordPair
 
 class WordAdapter(
@@ -27,14 +27,13 @@ class WordAdapter(
 
         val context = holder.itemView.context
 
-        holder.wordTextView.text = context
-            .getString(
-                R.string.word_list,
-                words.elementAt(position).from,
-                words.elementAt(position).to
-            )
+        holder.wordTextView.text = context.getString(
+            R.string.word_list,
+            words.elementAt(position).from,
+            words.elementAt(position).to
+        )
 
-        if (words.indexOf(LocalTsvWords().getCurrentWord(context)) == position) {
+        if (words.indexOf(LocalTsvWordsRepository().getCurrentWord(context)) == position) {
             holder.wordTextView.setTextColor(context.getColor(R.color.colorAccent))
         } else {
             holder.wordTextView.setTextColor(context.getColor(R.color.colorPrimaryDark))
