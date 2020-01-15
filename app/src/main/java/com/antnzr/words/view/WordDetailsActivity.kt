@@ -3,29 +3,20 @@ package com.antnzr.words.view
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.webkit.WebView
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import com.antnzr.words.R
 import com.antnzr.words.data.WordPair
-import com.antnzr.words.utils.CONTEXT_REVERSO
-import com.antnzr.words.utils.GOOGLE_TRANSLATE
-import com.antnzr.words.utils.MyWebClient
-import com.antnzr.words.utils.UrlUtils.Companion.contextReversoUrl
-import com.antnzr.words.utils.UrlUtils.Companion.googleTranslateUrl
-import com.antnzr.words.utils.WORD_NEED_DETAILS
+import com.antnzr.words.utils.*
 
 
 class WordDetailsActivity : AppCompatActivity() {
-
-    private val TAG = WordDetailsActivity::class.java.simpleName
 
     private var wordWebView: WebView? = null
     private var spinner: ProgressBar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d(TAG, "onCreate: started...")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_word_details)
 
