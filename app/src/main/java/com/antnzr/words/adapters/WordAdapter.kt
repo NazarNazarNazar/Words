@@ -3,6 +3,7 @@ package com.antnzr.words.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.antnzr.words.R
@@ -42,11 +43,21 @@ class WordAdapter(
         holder.wordTextView.setOnClickListener {
             listener.onClick(holder.wordTextView, words.elementAt(position))
         }
+
+        holder.googleTranslateBtn.setOnClickListener {
+            listener.onClick(holder.googleTranslateBtn, words.elementAt(position))
+        }
+
+        holder.contextReversoBtn.setOnClickListener {
+            listener.onClick(holder.contextReversoBtn, words.elementAt(position))
+        }
     }
 
     override fun getItemCount() = words.size
 
     inner class WordsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val wordTextView: TextView = view.findViewById(R.id.word)
+        val googleTranslateBtn: ImageButton = view.findViewById(R.id.google_translate_btn)
+        val contextReversoBtn: ImageButton = view.findViewById(R.id.context_reverso_btn)
     }
 }

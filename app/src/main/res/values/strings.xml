@@ -12,4 +12,6 @@
     <string name="divider">Divider</string>
 
     <string name="word_list">%1$s | %2$s</string>
+    <string name="google_translate">google_translate</string>
+    <string name="context_reverso">context_reverso</string>
 </resources>

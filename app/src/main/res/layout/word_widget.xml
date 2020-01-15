@@ -56,10 +56,16 @@
         android:weightSum="5.0">
 
         <ImageButton
-            android:id="@+id/details_btn"
+            android:id="@+id/google_translate_btn"
             style="@style/WidgetImageButton"
-            android:contentDescription="@string/word_details"
-            android:src="@drawable/ic_details" />
+            android:contentDescription="@string/google_translate"
+            android:src="@drawable/ic_google_translate" />
+
+        <ImageButton
+            android:id="@+id/context_reverso_btn"
+            style="@style/WidgetImageButton"
+            android:contentDescription="@string/context_reverso"
+            android:src="@drawable/ic_context_reverso" />
 
         <ImageButton
             android:id="@+id/left_btn"
@@ -78,12 +84,6 @@
             style="@style/WidgetImageButton"
             android:contentDescription="@string/list"
             android:src="@drawable/ic_list" />
-
-        <ImageButton
-            android:id="@+id/do_not_display_btn"
-            style="@style/WidgetImageButton"
-            android:contentDescription="@string/do_not_display"
-            android:src="@drawable/ic_do_not_display" />
 
     </LinearLayout>
     <!--  //  BUTTONS SECTION   -->

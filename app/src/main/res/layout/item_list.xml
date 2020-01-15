@@ -15,19 +15,61 @@
         android:foreground="?android:attr/selectableItemBackground"
         app:cardCornerRadius="5dp">
 
-        <TextView
-            android:id="@+id/word"
+        <RelativeLayout
+            android:id="@+id/rl_icons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="start"
-            android:maxLines="4"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:text="@string/appwidget_example_text"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/word"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/google_translate_btn"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="start"
+                android:maxLines="4"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="@string/appwidget_example_text"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/google_translate_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/context_reverso_btn"
+                android:background="@null"
+                android:clickable="true"
+                android:contentDescription="@string/google_translate"
+                android:focusable="true"
+                android:paddingStart="0dp"
+                android:paddingEnd="5dp"
+                android:src="@drawable/ic_google_translate" />
+
+            <ImageButton
+                android:id="@+id/context_reverso_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:clickable="true"
+                android:contentDescription="@string/context_reverso"
+                android:focusable="true"
+                android:paddingStart="0dp"
+                android:paddingEnd="5dp"
+                android:src="@drawable/ic_context_reverso" />
+
+        </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
 

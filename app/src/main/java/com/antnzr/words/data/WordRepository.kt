@@ -1,8 +1,10 @@
 package com.antnzr.words.data
 
 import android.content.Context
+import android.os.Parcelable
 import com.antnzr.words.R
 import com.antnzr.words.utils.*
+import kotlinx.android.parcel.Parcelize
 import java.nio.charset.Charset
 import kotlin.random.Random
 
@@ -37,7 +39,9 @@ class LocalTsvWordsRepository :
                             wordPairs.add(
                                 WordPair(
                                     tokens[FROM_INDEX],
-                                    tokens[TO_INDEX]
+                                    tokens[TO_INDEX],
+                                    tokens[LANG_FROM_INDEX],
+                                    tokens[LANG_TO_INDEX]
                                 )
                             )
                         }
@@ -91,7 +95,7 @@ class LocalTsvWordsRepository :
         val prefs = context?.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
         val editor = prefs?.edit()
 
-        editor?.putString(CURRENT_WORD, word)
+        editor?.putString(WORD_NEED_DETAILS, word)
         editor?.apply()
     }
 
@@ -110,7 +114,15 @@ private fun currentWordPairIndex(words: Collection<WordPair>?, word: String?): I
 
 private fun currentWordFromPref(context: Context?): String? {
     val prefs = context?.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
-    return prefs?.getString(CURRENT_WORD, "")
+    return prefs?.getString(WORD_NEED_DETAILS, "")
 }
 
-data class WordPair(var from: String, var to: String, var isDisplay: Boolean = true)
+@Parcelize
+data class WordPair(
+    var from: String,
+    var to: String,
+    var langFrom: String = "english",
+    val langTo: String = "russian",
+    var isDisplay:
+    Boolean = true
+) : Parcelable

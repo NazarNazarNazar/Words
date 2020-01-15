@@ -2,6 +2,7 @@ package com.antnzr.words.view
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.View
 import android.webkit.WebView
@@ -9,14 +10,16 @@ import android.webkit.WebViewClient
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import com.antnzr.words.R
-import com.antnzr.words.utils.CURRENT_WORD
+import com.antnzr.words.data.WordPair
+import com.antnzr.words.utils.CONTEXT_REVERSO
+import com.antnzr.words.utils.GOOGLE_TRANSLATE
+import com.antnzr.words.utils.WORD_NEED_DETAILS
+import java.util.*
 
 
 class WordDetailsActivity : AppCompatActivity() {
 
     private val TAG = WordDetailsActivity::class.java.simpleName
-    private val url =
-        "https://translate.google.com/?hl=ru#view=home&op=translate&sl=auto&tl=ru&text="
 
     private var wordWebView: WebView? = null
     private var spinner: ProgressBar? = null
@@ -31,9 +34,18 @@ class WordDetailsActivity : AppCompatActivity() {
         wordWebView = findViewById(R.id.word_web_view)
         prepareWebView(wordWebView, spinner as ProgressBar)
 
-        if (intent.hasExtra(CURRENT_WORD)) {
-            val word = intent.getStringExtra(CURRENT_WORD)
-            wordWebView?.loadUrl(url + word)
+        if (intent.hasExtra(GOOGLE_TRANSLATE) &&
+            intent.hasExtra(WORD_NEED_DETAILS)
+        ) {
+            wordWebView?.loadUrl(
+                googleTranslateUrl(intent.getParcelableExtra<Parcelable>(WORD_NEED_DETAILS) as WordPair)
+            )
+        } else if (intent.hasExtra(CONTEXT_REVERSO) &&
+            intent.hasExtra(WORD_NEED_DETAILS)
+        ) {
+            wordWebView?.loadUrl(
+                contextReversoUrl(intent.getParcelableExtra<Parcelable>(WORD_NEED_DETAILS) as WordPair)
+            )
         }
     }
 }
@@ -64,4 +76,32 @@ private class MyWebClient(spinner: ProgressBar) : WebViewClient() {
         view.loadUrl(url)
         return true
     }
+}
+
+fun contextReversoUrl(wordPair: WordPair): String {
+    return "https://context.reverso.net/перевод/" +
+            "${wordPair.langFrom.toLowerCase(Locale.getDefault())}-" +
+            "${wordPair.langTo.toLowerCase(Locale.getDefault())}/" +
+            wordPair.from.split("\\s".toRegex()).joinToString(separator = "+")
+}
+
+fun googleTranslateUrl(wordPair: WordPair): String {
+    return "https://translate.google.com/" +
+            "#view=home" +
+            "&op=translate" +
+            "&sl=${getLang(wordPair.langFrom)}" +
+            "&tl=${getLang(wordPair.langTo)}" +
+            "&text=${wordPair.from}"
+}
+
+fun getLang(str: String): String {
+    when (str.toLowerCase(Locale.getDefault())) {
+        "english",
+        "английский",
+        "ingles" -> return "en"
+        "russian",
+        "русский",
+        "ruso" -> return "ru"
+    }
+    return "en"
 }

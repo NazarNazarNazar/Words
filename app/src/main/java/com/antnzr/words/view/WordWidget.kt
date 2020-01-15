@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.os.Parcelable
 import android.util.Log
 import android.widget.RemoteViews
 import com.antnzr.words.R
@@ -42,13 +43,19 @@ class WordWidget : AppWidgetProvider() {
         }
 
         when (intent?.action) {
-            WORD_DETAILS_ACTION -> {
-                val detailsIntent = Intent(context, WordDetailsActivity::class.java)
-                detailsIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, getIntExtra(intent))
-                detailsIntent.putExtra(CURRENT_WORD, intent.getStringExtra(CURRENT_WORD))
-                detailsIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-
-                context?.startActivity(detailsIntent)
+            GOOGLE_TRANSLATE_ACTION -> {
+                showWordDetailsWith(
+                    GOOGLE_TRANSLATE,
+                    intent.getParcelableExtra<Parcelable>(WORD_NEED_DETAILS) as WordPair,
+                    context
+                )
+            }
+            CONTEXT_REVERSO_ACTION -> {
+                showWordDetailsWith(
+                    CONTEXT_REVERSO,
+                    intent.getParcelableExtra<Parcelable>(WORD_NEED_DETAILS) as WordPair,
+                    context
+                )
             }
             NEXT_WORD_ACTION,
             AppWidgetManager.ACTION_APPWIDGET_UPDATE -> {
@@ -72,7 +79,6 @@ class WordWidget : AppWidgetProvider() {
             LIST_ACTION -> {
                 val listIntent = Intent(context, HolderActivity::class.java)
                 listIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, getIntExtra(intent))
-                listIntent.putExtra(CURRENT_WORD, listIntent.getStringExtra(CURRENT_WORD))
                 listIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
                 context?.startActivity(listIntent)
@@ -97,10 +103,17 @@ class WordWidget : AppWidgetProvider() {
         )
             .apply {
                 setOnClickPendingIntent(
-                    R.id.details_btn,
+                    R.id.google_translate_btn,
                     pendingIntent(
                         appWidgetId, context,
-                        WORD_DETAILS_ACTION, currentWordPair?.from
+                        GOOGLE_TRANSLATE_ACTION, currentWordPair
+                    )
+                )
+                setOnClickPendingIntent(
+                    R.id.context_reverso_btn,
+                    pendingIntent(
+                        appWidgetId, context,
+                        CONTEXT_REVERSO_ACTION, currentWordPair
                     )
                 )
                 setOnClickPendingIntent(
@@ -125,17 +138,9 @@ class WordWidget : AppWidgetProvider() {
                     )
                 )
                 setOnClickPendingIntent(
-                    R.id.do_not_display_btn,
-                    pendingIntent(
-                        appWidgetId, context,
-                        DO_NOT_DISPLAY_WORD_ACTION
-                    )
-                )
-                setOnClickPendingIntent(
                     R.id.word,
                     pendingIntent(
-                        appWidgetId,
-                        context,
+                        appWidgetId, context,
                         AppWidgetManager.ACTION_APPWIDGET_UPDATE
                     )
                 )
@@ -146,17 +151,26 @@ class WordWidget : AppWidgetProvider() {
     }
 }
 
+private fun showWordDetailsWith(resource: String, wordPair: WordPair?, context: Context?) {
+    val gtIntent = Intent(context, WordDetailsActivity::class.java)
+    gtIntent.putExtra(resource, resource)
+    gtIntent.putExtra(WORD_NEED_DETAILS, wordPair)
+    gtIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+
+    context?.startActivity(gtIntent)
+}
+
 private fun pendingIntent(
     appWidgetId: Int,
     context: Context,
     action: String,
-    word: String? = null
+    wordPair: WordPair? = null
 ): PendingIntent {
     val intent = Intent(context, WordWidget::class.java)
     intent.action = action
     intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
 
-    word.let { intent.putExtra(CURRENT_WORD, it) }
+    wordPair.let { intent.putExtra(WORD_NEED_DETAILS, it) }
 
     return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 }
