@@ -4,17 +4,17 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
-import android.view.View
 import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import com.antnzr.words.R
 import com.antnzr.words.data.WordPair
 import com.antnzr.words.utils.CONTEXT_REVERSO
 import com.antnzr.words.utils.GOOGLE_TRANSLATE
+import com.antnzr.words.utils.MyWebClient
+import com.antnzr.words.utils.UrlUtils.Companion.contextReversoUrl
+import com.antnzr.words.utils.UrlUtils.Companion.googleTranslateUrl
 import com.antnzr.words.utils.WORD_NEED_DETAILS
-import java.util.*
 
 
 class WordDetailsActivity : AppCompatActivity() {
@@ -61,47 +61,4 @@ private fun prepareWebView(webView: WebView?, spinner: ProgressBar) {
     webView?.webViewClient = MyWebClient(spinner)
     webView?.isVerticalScrollBarEnabled = true
     webView?.isHorizontalScrollBarEnabled = true
-}
-
-private class MyWebClient(spinner: ProgressBar) : WebViewClient() {
-    private var spinner: ProgressBar? = spinner
-
-    override fun onPageFinished(view: WebView?, url: String?) {
-        super.onPageFinished(view, url)
-
-        spinner?.visibility = View.GONE
-    }
-
-    override fun shouldOverrideUrlLoading(view: WebView, url: String?): Boolean {
-        view.loadUrl(url)
-        return true
-    }
-}
-
-fun contextReversoUrl(wordPair: WordPair): String {
-    return "https://context.reverso.net/перевод/" +
-            "${wordPair.langFrom.toLowerCase(Locale.getDefault())}-" +
-            "${wordPair.langTo.toLowerCase(Locale.getDefault())}/" +
-            wordPair.from.split("\\s".toRegex()).joinToString(separator = "+")
-}
-
-fun googleTranslateUrl(wordPair: WordPair): String {
-    return "https://translate.google.com/" +
-            "#view=home" +
-            "&op=translate" +
-            "&sl=${getLang(wordPair.langFrom)}" +
-            "&tl=${getLang(wordPair.langTo)}" +
-            "&text=${wordPair.from}"
-}
-
-fun getLang(str: String): String {
-    when (str.toLowerCase(Locale.getDefault())) {
-        "english",
-        "английский",
-        "ingles" -> return "en"
-        "russian",
-        "русский",
-        "ruso" -> return "ru"
-    }
-    return "en"
 }

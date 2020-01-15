@@ -7,7 +7,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Parcelable
-import android.util.Log
 import android.widget.RemoteViews
 import com.antnzr.words.R
 import com.antnzr.words.data.LocalTsvWordsRepository
@@ -16,7 +15,6 @@ import com.antnzr.words.utils.*
 
 
 class WordWidget : AppWidgetProvider() {
-    private val TAG = WordWidget::class.java.simpleName
 
     private var repository = LocalTsvWordsRepository()
 
@@ -25,15 +23,12 @@ class WordWidget : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
-        Log.d(TAG, "onUpdate: started...")
-
         appWidgetIds.forEach { appWidgetId ->
             updateAppWidget(context, appWidgetId, repository.getCurrentWord(context))
         }
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        Log.d(TAG, "onReceive: started")
         super.onReceive(context, intent)
 
         intent?.let {
@@ -151,15 +146,6 @@ class WordWidget : AppWidgetProvider() {
     }
 }
 
-private fun showWordDetailsWith(resource: String, wordPair: WordPair?, context: Context?) {
-    val gtIntent = Intent(context, WordDetailsActivity::class.java)
-    gtIntent.putExtra(resource, resource)
-    gtIntent.putExtra(WORD_NEED_DETAILS, wordPair)
-    gtIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-
-    context?.startActivity(gtIntent)
-}
-
 private fun pendingIntent(
     appWidgetId: Int,
     context: Context,
@@ -197,4 +183,13 @@ fun updateWordWidget(context: Context?) {
         val widget = WordWidget()
         widget.onUpdate(it, widgetManager, ids)
     }
+}
+
+fun showWordDetailsWith(resource: String, wordPair: WordPair?, context: Context?) {
+    val gtIntent = Intent(context, WordDetailsActivity::class.java)
+    gtIntent.putExtra(resource, resource)
+    gtIntent.putExtra(WORD_NEED_DETAILS, wordPair)
+    gtIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+
+    context?.startActivity(gtIntent)
 }
