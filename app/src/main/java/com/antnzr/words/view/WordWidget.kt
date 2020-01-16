@@ -12,6 +12,8 @@ import com.antnzr.words.R
 import com.antnzr.words.data.LocalTsvWordsRepository
 import com.antnzr.words.data.WordPair
 import com.antnzr.words.utils.*
+import com.antnzr.words.view.wordDetails.WordDetailsActivity
+import com.antnzr.words.view.wordList.WordListActivity
 
 
 class WordWidget : AppWidgetProvider() {
@@ -72,7 +74,7 @@ class WordWidget : AppWidgetProvider() {
                 }
             }
             LIST_ACTION -> {
-                val listIntent = Intent(context, HolderActivity::class.java)
+                val listIntent = Intent(context, WordListActivity::class.java)
                 listIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, getIntExtra(intent))
                 listIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
@@ -186,10 +188,10 @@ fun updateWordWidget(context: Context?) {
 }
 
 fun showWordDetailsWith(resource: String, wordPair: WordPair?, context: Context?) {
-    val gtIntent = Intent(context, WordDetailsActivity::class.java)
-    gtIntent.putExtra(resource, resource)
-    gtIntent.putExtra(WORD_NEED_DETAILS, wordPair)
-    gtIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+    val intent = Intent(context, WordDetailsActivity::class.java)
+    intent.putExtra(WEB_RESOURCE, resource)
+    intent.putExtra(WORD_NEED_DETAILS, wordPair)
+    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
-    context?.startActivity(gtIntent)
+    context?.startActivity(intent)
 }

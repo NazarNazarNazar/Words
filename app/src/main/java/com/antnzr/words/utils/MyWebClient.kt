@@ -5,8 +5,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ProgressBar
 
-class MyWebClient(spinner: ProgressBar) : WebViewClient() {
-    private var spinner: ProgressBar? = spinner
+class MyWebClient(private var spinner: ProgressBar?) : WebViewClient() {
 
     override fun onPageFinished(view: WebView?, url: String?) {
         super.onPageFinished(view, url)

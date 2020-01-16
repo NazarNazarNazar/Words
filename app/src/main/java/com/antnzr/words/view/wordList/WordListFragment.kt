@@ -1,4 +1,4 @@
-package com.antnzr.words.view
+package com.antnzr.words.view.wordList
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,18 +9,21 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.antnzr.words.R
-import com.antnzr.words.adapters.RecyclerViewClickListener
+import com.antnzr.words.utils.RecyclerViewClickListener
 import com.antnzr.words.adapters.WordAdapter
 import com.antnzr.words.data.LocalTsvWordsRepository
 import com.antnzr.words.data.WordPair
 import com.antnzr.words.utils.CONTEXT_REVERSO
 import com.antnzr.words.utils.GOOGLE_TRANSLATE
+import com.antnzr.words.view.showWordDetailsWith
+import com.antnzr.words.view.updateWordWidget
 import com.antnzr.words.viewmodels.WordsViewModel
 import com.antnzr.words.viewmodels.WordsViewModelFactory
-import kotlinx.android.synthetic.main.word_list_fragment.*
+import kotlinx.android.synthetic.main.fragment_word_list.*
 
 
-class WordListFragment : Fragment(), RecyclerViewClickListener {
+class WordListFragment : Fragment(),
+    RecyclerViewClickListener {
 
     companion object {
         fun newInstance() = WordListFragment()
@@ -36,7 +39,7 @@ class WordListFragment : Fragment(), RecyclerViewClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.word_list_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_word_list, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

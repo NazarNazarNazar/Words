@@ -16,6 +16,7 @@ const val TO_INDEX: Int = 3
 const val SHARED_PREF: String = "prefs"
 const val CURRENT_WORD = "currentWord"
 
-const val GOOGLE_TRANSLATE = "translate.google.com/"
+const val GOOGLE_TRANSLATE = "translate.google.com"
 const val CONTEXT_REVERSO = "context.reverso.net"
 const val WORD_NEED_DETAILS = "word_need_details"
+const val WEB_RESOURCE = "web_resource"

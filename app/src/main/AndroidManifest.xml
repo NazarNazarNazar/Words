@@ -13,8 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.antnzr.words.view.HolderActivity" />
-        <activity android:name=".view.WordDetailsActivity" />
+        <activity android:name=".view.wordList.WordListActivity" />
+        <activity android:name=".view.wordDetails.WordDetailsActivity" />
 
         <receiver android:name=".view.WordWidget">
             <intent-filter>

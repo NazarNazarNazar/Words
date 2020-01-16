@@ -1,4 +1,4 @@
-package com.antnzr.words.adapters
+package com.antnzr.words.utils
 
 import android.view.View
 import com.antnzr.words.data.WordPair

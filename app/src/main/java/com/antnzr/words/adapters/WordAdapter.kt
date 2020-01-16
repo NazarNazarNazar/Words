@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.antnzr.words.R
 import com.antnzr.words.data.LocalTsvWordsRepository
 import com.antnzr.words.data.WordPair
+import com.antnzr.words.utils.RecyclerViewClickListener
 
 class WordAdapter(
     private val words: Collection<WordPair>,
