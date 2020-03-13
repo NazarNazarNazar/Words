@@ -1,10 +1,12 @@
 package com.antnzr.words.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.antnzr.words.R
 import com.antnzr.words.data.LocalTsvWordsRepository
@@ -13,7 +15,7 @@ import com.antnzr.words.utils.RecyclerViewClickListener
 
 class WordAdapter(
     private val words: Collection<WordPair>,
-    private val listener: RecyclerViewClickListener
+    private val listener: RecyclerViewClickListener<WordPair>
 ) : RecyclerView.Adapter<WordAdapter.WordsViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordsViewHolder {
@@ -26,6 +28,7 @@ class WordAdapter(
         )
     }
 
+
     override fun onBindViewHolder(holder: WordsViewHolder, position: Int) {
         val context = holder.itemView.context
 
@@ -36,9 +39,9 @@ class WordAdapter(
         )
 
         if (words.indexOf(LocalTsvWordsRepository().getCurrentWord(context)) == position) {
-            holder.wordTextView.setTextColor(context.getColor(R.color.colorAccent))
+            holder.wordTextView.setTextColor(ContextCompat.getColor(context, R.color.colorAccent))
         } else {
-            holder.wordTextView.setTextColor(context.getColor(R.color.colorPrimaryDark))
+            holder.wordTextView.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
         }
 
         holder.wordTextView.setOnClickListener {
@@ -54,7 +57,7 @@ class WordAdapter(
         }
     }
 
-    override fun getItemCount() = words.size
+    override fun getItemCount(): Int = words.size
 
     inner class WordsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val wordTextView: TextView = view.findViewById(R.id.word)

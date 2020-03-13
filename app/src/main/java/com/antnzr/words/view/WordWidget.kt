@@ -89,7 +89,6 @@ class WordWidget : AppWidgetProvider() {
         wordPair: WordPair? = null
     ) {
         val currentWordPair: WordPair? = wordPair
-            .let { it }
             ?: repository.getRandomWord(context)
 
         repository.saveCurrentWord(context, currentWordPair?.from)

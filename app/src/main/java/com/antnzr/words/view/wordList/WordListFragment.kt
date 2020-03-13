@@ -6,15 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.antnzr.words.R
-import com.antnzr.words.utils.RecyclerViewClickListener
 import com.antnzr.words.adapters.WordAdapter
 import com.antnzr.words.data.LocalTsvWordsRepository
 import com.antnzr.words.data.WordPair
 import com.antnzr.words.utils.CONTEXT_REVERSO
 import com.antnzr.words.utils.GOOGLE_TRANSLATE
+import com.antnzr.words.utils.RecyclerViewClickListener
 import com.antnzr.words.view.showWordDetailsWith
 import com.antnzr.words.view.updateWordWidget
 import com.antnzr.words.viewmodels.WordsViewModel
@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.fragment_word_list.*
 
 
 class WordListFragment : Fragment(),
-    RecyclerViewClickListener {
+    RecyclerViewClickListener<WordPair> {
 
     companion object {
         fun newInstance() = WordListFragment()
@@ -46,8 +46,7 @@ class WordListFragment : Fragment(),
         super.onActivityCreated(savedInstanceState)
 
         viewModelFactory = WordsViewModelFactory(repository)
-        viewModel = ViewModelProviders
-            .of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
             .get(WordsViewModel::class.java)
 
         viewModel.getWords()
