@@ -1,6 +1,5 @@
 package com.antnzr.words.adapters
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +27,6 @@ class WordAdapter(
         )
     }
 
-
     override fun onBindViewHolder(holder: WordsViewHolder, position: Int) {
         val context = holder.itemView.context
 
@@ -41,23 +39,23 @@ class WordAdapter(
         if (words.indexOf(LocalTsvWordsRepository().getCurrentWord(context)) == position) {
             holder.wordTextView.setTextColor(ContextCompat.getColor(context, R.color.colorAccent))
         } else {
-            holder.wordTextView.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
+            holder.wordTextView.setTextColor(
+                ContextCompat.getColor(context, R.color.colorPrimaryDark)
+            )
         }
 
-        holder.wordTextView.setOnClickListener {
-            listener.onClick(holder.wordTextView, words.elementAt(position))
-        }
-
-        holder.googleTranslateBtn.setOnClickListener {
-            listener.onClick(holder.googleTranslateBtn, words.elementAt(position))
-        }
-
-        holder.contextReversoBtn.setOnClickListener {
-            listener.onClick(holder.contextReversoBtn, words.elementAt(position))
-        }
+        setClick(holder.wordTextView, words.elementAt(position))
+        setClick(holder.googleTranslateBtn, words.elementAt(position))
+        setClick(holder.contextReversoBtn, words.elementAt(position))
     }
 
     override fun getItemCount(): Int = words.size
+
+    private fun setClick(view: View, wp: WordPair) {
+        view.setOnClickListener {
+            listener.onClick(view, wp)
+        }
+    }
 
     inner class WordsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val wordTextView: TextView = view.findViewById(R.id.word)

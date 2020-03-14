@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity(),
         viewModel.getSubFiles()
 
         viewModel.subFiles.observe(this, Observer { subtitles ->
+            Log.d(TAG, "${subtitles.size}")
             main_list.also {
                 it.layoutManager = LinearLayoutManager(this)
                 it.setHasFixedSize(true)
@@ -80,6 +82,7 @@ class MainActivity : AppCompatActivity(),
                     }
                 })
         }
+
         return true
     }
 
@@ -99,4 +102,5 @@ class MainActivity : AppCompatActivity(),
 
     }
 }
+
 

@@ -9,7 +9,7 @@ import com.antnzr.words.R
 import com.antnzr.words.utils.RecyclerViewClickListener
 
 class SubFilesAdapter(
-    private val subtitles: List<String>,
+    private var subtitles: List<String>,
     private val listener: RecyclerViewClickListener<String>
 ) :
     RecyclerView.Adapter<SubFilesAdapter.SearchSubtitleViewHolder>() {

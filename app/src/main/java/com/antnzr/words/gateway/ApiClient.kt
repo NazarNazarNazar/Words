@@ -20,7 +20,7 @@ object ApiClient {
                 .create()
 
             val interceptor = HttpLoggingInterceptor()
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC)
 
             val headerInterceptor = object : Interceptor {
                 override fun intercept(chain: Interceptor.Chain): Response {

@@ -1,7 +1,5 @@
 package com.antnzr.words.utils
 
-import android.media.SubtitleData
-
 const val GOOGLE_TRANSLATE_ACTION = "google_translate_action"
 const val CONTEXT_REVERSO_ACTION = "context_reverso_action"
 const val PREVIOUS_WORD_ACTION = "previous_word_action"
