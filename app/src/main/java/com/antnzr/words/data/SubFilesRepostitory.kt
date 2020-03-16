@@ -7,9 +7,18 @@ import java.io.File
 
 interface SubFilesRepository {
     fun getLocalSubtitles(context: Context): ArrayList<String>
+    fun findSubtitle(context: Context, fileName: String): File?
 }
 
 class LocalSubFilesRepository : SubFilesRepository {
+
+    override fun findSubtitle(context: Context, fileName: String): File? {
+        val subDir: File? = context.getExternalFilesDir(SUB_LOCAL_DIR)
+
+        return subDir?.walkTopDown()
+            ?.filter { file -> file.name.equals(fileName) }
+            ?.first()
+    }
 
     override fun getLocalSubtitles(context: Context): ArrayList<String> {
         val subDir: File? = context.getExternalFilesDir(SUB_LOCAL_DIR)

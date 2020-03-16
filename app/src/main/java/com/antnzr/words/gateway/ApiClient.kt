@@ -8,6 +8,7 @@ import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 object ApiClient {
 
@@ -20,7 +21,7 @@ object ApiClient {
                 .create()
 
             val interceptor = HttpLoggingInterceptor()
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC)
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
 
             val headerInterceptor = object : Interceptor {
                 override fun intercept(chain: Interceptor.Chain): Response {
@@ -38,6 +39,9 @@ object ApiClient {
             val client = OkHttpClient.Builder()
                 .addInterceptor(interceptor)
                 .addInterceptor(headerInterceptor)
+                .connectTimeout(5, TimeUnit.MINUTES)
+                .readTimeout(5, TimeUnit.MINUTES)
+                .retryOnConnectionFailure(true)
                 .build()
 
             val retrofit = Retrofit.Builder()

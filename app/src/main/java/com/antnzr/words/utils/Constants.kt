@@ -25,4 +25,5 @@ const val SUB_DOWNLOAD_DIR = "subDownloadDir"
 const val SUB_LOCAL_DIR = "subLocalDir"
 
 const val SUBTITLE_EXTENSION = ".srt"
+const val SUBTITLE_FILE_NAME = "subtitle_file_name"
 

@@ -19,6 +19,8 @@ import com.antnzr.words.R
 import com.antnzr.words.adapters.SubFilesAdapter
 import com.antnzr.words.data.LocalSubFilesRepository
 import com.antnzr.words.utils.RecyclerViewClickListener
+import com.antnzr.words.utils.SUBTITLE_FILE_NAME
+import com.antnzr.words.view.subtitle.SubtitleActivity
 import com.antnzr.words.viewmodels.SubFilesViewModel
 import com.antnzr.words.viewmodels.SubFilesViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
@@ -99,7 +101,9 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onClick(view: View, data: String) {
-
+        val intent = Intent(this, SubtitleActivity::class.java)
+        intent.putExtra(SUBTITLE_FILE_NAME, data)
+        startActivity(intent)
     }
 }
 

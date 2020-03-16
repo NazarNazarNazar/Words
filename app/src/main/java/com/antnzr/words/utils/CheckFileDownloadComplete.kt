@@ -17,7 +17,7 @@ class CheckFileDownloadComplete : BroadcastReceiver() {
         val action = intent.action
 
         if (DownloadManager.ACTION_DOWNLOAD_COMPLETE == action) {
-            Log.d(TAG, "download file complete: ACTION_DOWNLOAD_COMPLETE")
+            Log.d(TAG, "download file complete")
 
             val query = DownloadManager.Query()
             query.setFilterById(intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0))
@@ -45,7 +45,7 @@ class CheckFileDownloadComplete : BroadcastReceiver() {
                 val file = getFile(it)
                 val unzipTo = unzipToDirName(context, file)
 
-                ZipUtils.unzip(file, unzipTo.absolutePath).let { it ->
+                FileUtils.unzip(file, unzipTo.absolutePath).let { it ->
                     if (it) {
                         unzipTo.listFiles().iterator().forEach { file ->
                             if (!file.name.endsWith(SUBTITLE_EXTENSION)) {
@@ -62,8 +62,8 @@ class CheckFileDownloadComplete : BroadcastReceiver() {
     }
 
     private fun unzipToDirName(context: Context, file: File): File {
-        val subDir: File = context.getExternalFilesDir(SUB_LOCAL_DIR)
-        if (!subDir.exists()) {
+        val subDir: File? = context.getExternalFilesDir(SUB_LOCAL_DIR)
+        if (!subDir?.exists()!!) {
             subDir.mkdir()
         }
 

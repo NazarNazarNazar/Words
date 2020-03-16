@@ -5,13 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isEmpty
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.antnzr.words.R
 import com.antnzr.words.adapters.SearchSubtitleAdapter
 import com.antnzr.words.data.SubtitleRepository
@@ -22,7 +19,6 @@ import com.antnzr.words.utils.bind
 import com.antnzr.words.viewmodels.SubtitlesViewModel
 import com.antnzr.words.viewmodels.SubtitlesViewModelFactory
 import kotlinx.android.synthetic.main.activity_search.*
-import kotlin.collections.ArrayList
 
 class SearchActivity : AppCompatActivity(), RecyclerViewClickListener<Subtitle> {
     private val TAG = this.javaClass.simpleName

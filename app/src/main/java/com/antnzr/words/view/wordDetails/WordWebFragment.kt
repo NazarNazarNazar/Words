@@ -42,11 +42,9 @@ class WordWebFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_word_web, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         wordWebView = view.findViewById(R.id.word_web_view)
         spinner = view.findViewById(R.id.spinner)
         prepareWebView(wordWebView, spinner)
@@ -55,8 +53,14 @@ class WordWebFragment : Fragment() {
             GOOGLE_TRANSLATE -> wordWebView?.loadUrl(googleTranslateUrl(wordPair))
             CONTEXT_REVERSO -> wordWebView?.loadUrl(contextReversoUrl(wordPair))
         }
+    }
 
-        return view
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+        return inflater.inflate(R.layout.fragment_word_web, container, false)
     }
 
     override fun onAttach(context: Context) {

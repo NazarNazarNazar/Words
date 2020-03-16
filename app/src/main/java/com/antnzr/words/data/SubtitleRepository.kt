@@ -48,10 +48,12 @@ class SubtitleRepositoryImpl : SubtitleRepository {
 
     private fun filterSubtitles(subtitles: ArrayList<Subtitle>, subName: String): List<Subtitle> {
         return subtitles
-            .filter { sub ->
-                sub.subFileName.toLowerCase(Locale.getDefault())
-                    .contains(subName.toLowerCase(Locale.getDefault()))
-            }.sortedWith(compareByDescending { it.subRating.toFloat() })
+//            .filter { sub ->
+//                sub.subFileName.toLowerCase(Locale.getDefault())
+//                    .contains(subName.toLowerCase(Locale.getDefault()))
+//            }
+            .sortedWith(compareByDescending { it.subRating.toFloat() })
+            .reversed()
     }
 
     private fun downloadFile(context: Context, url: String) {
@@ -65,7 +67,6 @@ class SubtitleRepositoryImpl : SubtitleRepository {
 
                 val localSubDir =
                     context.getExternalFilesDir(SUB_LOCAL_DIR).resolve(uri.lastPathSegment)
-                Log.d(TAG, "local sub dir ************* ==> $localSubDir")
                 if (localSubDir.exists()) {
                     Toast.makeText(context, "Already Exists...", Toast.LENGTH_LONG).show()
                     return
