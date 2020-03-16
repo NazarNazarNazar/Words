@@ -24,18 +24,19 @@ interface SubtitleRepository {
     fun downloadSubtitle(context: Context, url: String)
 }
 
+private val TAG = SubtitleRepositoryImpl::class.simpleName
+
 class SubtitleRepositoryImpl : SubtitleRepository {
-    private val TAG = this.javaClass.simpleName
 
     override fun getSubtitles(context: Context, subName: String): ArrayList<Subtitle> {
-        return getSubtitles(subName)!!
+        return getSubtitles(subName)
     }
 
-    private fun getSubtitles(subName: String, lang: String = "eng"): ArrayList<Subtitle>? {
+    private fun getSubtitles(subName: String, lang: String = "eng"): ArrayList<Subtitle> {
         val call: Call<ArrayList<Subtitle>> = ApiClient.getClient.getSubtitles(subName, lang)
 
         return try {
-            ArrayList(filterSubtitles(call.execute().body()!!, subName))
+            filterSubtitles(call.execute().body()!!, subName)
         } catch (exception: Exception) {
             Log.d(TAG, "Couldn't get subtitles. Error: ${exception.message}")
             ArrayList()
@@ -46,14 +47,16 @@ class SubtitleRepositoryImpl : SubtitleRepository {
         downloadFile(context, url)
     }
 
-    private fun filterSubtitles(subtitles: ArrayList<Subtitle>, subName: String): List<Subtitle> {
-        return subtitles
+    private fun filterSubtitles(
+        subtitles: ArrayList<Subtitle>,
+        subName: String
+    ): ArrayList<Subtitle> {
+        return ArrayList(subtitles
 //            .filter { sub ->
 //                sub.subFileName.toLowerCase(Locale.getDefault())
 //                    .contains(subName.toLowerCase(Locale.getDefault()))
 //            }
-            .sortedWith(compareByDescending { it.subRating.toFloat() })
-            .reversed()
+                .sortedWith(compareByDescending { it.subRating.toFloat() })) // TODO: rating
     }
 
     private fun downloadFile(context: Context, url: String) {

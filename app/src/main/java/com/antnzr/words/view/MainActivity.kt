@@ -33,11 +33,13 @@ import com.antnzr.words.viewmodels.SubFilesViewModel
 import com.antnzr.words.viewmodels.SubFilesViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
 
+private val TAG = MainActivity::class.simpleName
+
 class MainActivity : AppCompatActivity(),
     RecyclerViewClickListener<String> {
-    private val TAG = this.javaClass.simpleName
 
     private var adapter: SubFilesAdapter? = null
+    private val paint = Paint()
 
     private lateinit var viewModelFactory: SubFilesViewModelFactory
     private lateinit var viewModel: SubFilesViewModel
@@ -100,8 +102,8 @@ class MainActivity : AppCompatActivity(),
                     actionState: Int,
                     isCurrentlyActive: Boolean
                 ) {
-                    val paint = Paint()
-                    paint.color = ContextCompat.getColor(this@MainActivity, R.color.colorPrimaryLight)
+                    paint.color =
+                        ContextCompat.getColor(this@MainActivity, R.color.colorPrimaryLight)
                     val icon: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.delete)
 
                     if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
@@ -112,7 +114,12 @@ class MainActivity : AppCompatActivity(),
 
                         if (dX > 0) {
                             val background =
-                                RectF(view.left.toFloat(), view.top.toFloat(), dX, view.bottom.toFloat())
+                                RectF(
+                                    view.left.toFloat(),
+                                    view.top.toFloat(),
+                                    dX,
+                                    view.bottom.toFloat()
+                                )
                             canvas.drawRect(background, paint)
 
                             val iconDest = RectF(
@@ -124,7 +131,12 @@ class MainActivity : AppCompatActivity(),
                             canvas.drawBitmap(icon, null, iconDest, paint)
                         } else {
                             val background =
-                                RectF(view.right.toFloat() + dX, view.top.toFloat(), view.right.toFloat(), view.bottom.toFloat())
+                                RectF(
+                                    view.right.toFloat() + dX,
+                                    view.top.toFloat(),
+                                    view.right.toFloat(),
+                                    view.bottom.toFloat()
+                                )
                             canvas.drawRect(background, paint)
 
                             val iconDest = RectF(
@@ -137,7 +149,15 @@ class MainActivity : AppCompatActivity(),
                         }
                     }
 
-                    super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    super.onChildDraw(
+                        canvas,
+                        recyclerView,
+                        viewHolder,
+                        dX,
+                        dY,
+                        actionState,
+                        isCurrentlyActive
+                    )
                 }
             }
         val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)

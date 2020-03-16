@@ -41,9 +41,13 @@ class LocalSubFilesRepository : SubFilesRepository {
             return ArrayList()
         }
 
-        return ArrayList(file.walkTopDown()
+        val result = ArrayList(file.walkTopDown()
             .filter { f -> f.name.endsWith(SUBTITLE_EXTENSION) }
             .map { f -> f.name }
             .toList())
+
+        result.reverse()
+
+        return result
     }
 }
