@@ -4,10 +4,12 @@ import android.content.Context
 import com.antnzr.words.utils.SUBTITLE_EXTENSION
 import com.antnzr.words.utils.SUB_LOCAL_DIR
 import java.io.File
+import java.lang.Exception
 
 interface SubFilesRepository {
     fun getLocalSubtitles(context: Context): ArrayList<String>
     fun findSubtitle(context: Context, fileName: String): File?
+    fun deleteSrtFile(context: Context, fileName: String): Boolean
 }
 
 class LocalSubFilesRepository : SubFilesRepository {
@@ -24,6 +26,14 @@ class LocalSubFilesRepository : SubFilesRepository {
         val subDir: File? = context.getExternalFilesDir(SUB_LOCAL_DIR)
 
         return getSubNames(subDir)
+    }
+
+    override fun deleteSrtFile(context: Context, fileName: String): Boolean {
+        return try {
+            findSubtitle(context, fileName)!!.delete()
+        } catch (exception: Exception) {
+            false
+        }
     }
 
     private fun getSubNames(file: File?): ArrayList<String> {

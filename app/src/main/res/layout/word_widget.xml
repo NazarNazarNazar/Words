@@ -25,7 +25,7 @@
             android:focusable="true"
             android:gravity="center"
             android:maxLines="3"
-            android:text="@string/appwidget_example_text"
+            android:text="@string/example_text"
             android:textColor="#ffffff"
             android:textSize="18sp"
             android:textStyle="bold" />
