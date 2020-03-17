@@ -1,18 +1,15 @@
-package com.antnzr.words.srt
+package com.antnzr.words.data
 
 import android.content.Context
-import android.graphics.Color
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextPaint
 import android.text.style.ClickableSpan
 import android.util.Log
-import android.view.TextureView
 import android.view.View
 import android.widget.TextView
-import com.antnzr.words.data.LocalSubFilesRepository
-import com.antnzr.words.data.SubFilesRepository
+import com.antnzr.words.srt.SrtTimeFormat
 import java.io.File
 import java.util.*
 import java.util.regex.Matcher
@@ -30,17 +27,21 @@ private const val TIME_CODE_DELIMITER_PATTERN = "( --> )"
 private const val BLANK_SPACE_PATTERN = "(\\s)"
 private const val TEXT_PATTERN = "([\\s\\S]*)"
 
-private const val WHITESPACE = "\\s+"
-
-
 private const val SRT_PATTERN =
     "$NUMBER_PATTERN$TIME_CODE_PATTERN$TIME_CODE_DELIMITER_PATTERN$TIME_CODE_PATTERN$BLANK_SPACE_PATTERN$TEXT_PATTERN"
 
-private val TAG = SrtFileContentHandler::class.simpleName
+private const val WHITESPACE = "\\s+"
 
-class SrtFileContentHandler {
+interface SrtFileContentRepository {
+    fun getSrtContent(context: Context, subName: String): ArrayList<Srt>
+}
 
-    fun getSrtContent(context: Context, subName: String): ArrayList<Srt> {
+private val TAG = SrtFileContentRepositoryImpl::class.simpleName
+
+class SrtFileContentRepositoryImpl :
+    SrtFileContentRepository {
+
+    override fun getSrtContent(context: Context, subName: String): ArrayList<Srt> {
         val repository: SubFilesRepository = LocalSubFilesRepository()
         val subFile: File? = repository.findSubtitle(context, subName)
 
@@ -88,7 +89,7 @@ class SrtFileContentHandler {
                     SrtTimeFormat.parse(end)
                 )
 
-                return Srt(number, timeCode, text)
+                return Srt(number, timeCode, text, mutateToSpannable(text))
             }
         } catch (exception: Exception) {
             Log.d(TAG, exception.message)
@@ -96,6 +97,35 @@ class SrtFileContentHandler {
         }
 
         return null
+    }
+
+    private fun mutateToSpannable(string: String): SpannableStringBuilder {
+        val ssb = SpannableStringBuilder()
+
+        val textArr: List<String> = string.split(WHITESPACE.toRegex())
+
+        textArr.map { str ->
+            val ss = SpannableString(str)
+
+            ss.setSpan(object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    widget as TextView
+
+                    println("Click on: [ $ss ]")
+                }
+
+                override fun updateDrawState(ds: TextPaint) {
+                    ds.isUnderlineText = false
+                }
+            }, 0, str.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+            ssb.append(ss).append(" ")
+        }
+        ssb
+            .appendln()
+            .appendln()
+
+        return ssb
     }
 
     companion object {

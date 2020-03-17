@@ -2,24 +2,30 @@ package com.antnzr.words.view.subtitle
 
 import android.content.Context
 import android.os.Bundle
-import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.antnzr.words.MainApplication
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.antnzr.words.R
-import com.antnzr.words.srt.Srt
-import com.antnzr.words.srt.SrtFileContentHandler
+import com.antnzr.words.adapters.SrtFileContentAdapter
+import com.antnzr.words.data.SrtFileContentRepositoryImpl
 import com.antnzr.words.utils.SUBTITLE_FILE_NAME
+import com.antnzr.words.viewmodels.SrtFileContentViewModel
+import com.antnzr.words.viewmodels.SrtFleContentViewModelFactory
+import kotlinx.android.synthetic.main.fragment_srt_content.*
 
 private val TAG = SubtitleFragment::class.java.simpleName
 
 class SubtitleFragment : Fragment() {
     private var sub: String? = null
 
-    private lateinit var subView: TextView
+    private lateinit var viewModelFactory: SrtFleContentViewModelFactory
+    private lateinit var viewModel: SrtFileContentViewModel
+
+    private val repository = SrtFileContentRepositoryImpl()
 
     private var listener: OnSubtitleFragmentInteractionListener? = null
 
@@ -32,21 +38,31 @@ class SubtitleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        subView = view.findViewById(R.id.sub)
-        subView.movementMethod = LinkMovementMethod.getInstance()
+    }
 
-        val contentHandler: SrtFileContentHandler = SrtFileContentHandler()
-        val content: ArrayList<Srt> =
-            contentHandler.getSrtContent(MainApplication.applicationContext(), sub!!)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
-        subView.text = SrtFileContentHandler.makeSpannable(content)
+        viewModelFactory = SrtFleContentViewModelFactory(repository, sub!!)
+        viewModel = ViewModelProvider(this, viewModelFactory)
+            .get(SrtFileContentViewModel::class.java)
+
+        viewModel.getSrts()
+
+        viewModel.srts.observe(viewLifecycleOwner, Observer { srts ->
+            sub_text_recycler.also {
+                it.layoutManager = LinearLayoutManager(requireContext())
+                it.setHasFixedSize(true)
+                it.adapter = SrtFileContentAdapter(srts)
+            }
+        })
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_subtitle, container, false)
+        return inflater.inflate(R.layout.fragment_srt_content, container, false)
     }
 
     companion object {
