@@ -8,4 +8,9 @@
     <color name="colorAccent">#FF3D00</color>
 
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="blue">#2196F3</color>
+    <color name="green">#2D9A31</color>
+    <color name="red">#FF0000</color>
+    <color name="lightBrown">#FFAB45</color>
 </resources>

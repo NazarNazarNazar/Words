@@ -5,8 +5,8 @@ import android.os.Bundle
 import com.antnzr.words.R
 import com.antnzr.words.utils.SUBTITLE_FILE_NAME
 
-class SubtitleActivity : AppCompatActivity(),
-    SubtitleFragment.OnSubtitleFragmentInteractionListener {
+class SrtContentActivity : AppCompatActivity(),
+    SrtContentFragment.OnSrtContentFragmentInteractionListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -15,7 +15,7 @@ class SubtitleActivity : AppCompatActivity(),
         val subtitleFileName = intent.getStringExtra(SUBTITLE_FILE_NAME)
 
         val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.fragment, SubtitleFragment.newInstance(subtitleFileName))
+        fragmentTransaction.replace(R.id.fragment, SrtContentFragment.newInstance(subtitleFileName))
         fragmentTransaction.commit()
     }
 

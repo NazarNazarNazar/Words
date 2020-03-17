@@ -2,6 +2,9 @@ package com.antnzr.words.view.subtitle
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,19 +18,22 @@ import com.antnzr.words.data.SrtFileContentRepositoryImpl
 import com.antnzr.words.utils.SUBTITLE_FILE_NAME
 import com.antnzr.words.viewmodels.SrtFileContentViewModel
 import com.antnzr.words.viewmodels.SrtFleContentViewModelFactory
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.fragment_srt_content.*
 
-private val TAG = SubtitleFragment::class.java.simpleName
+private val TAG = SrtContentFragment::class.java.simpleName
 
-class SubtitleFragment : Fragment() {
+class SrtContentFragment : Fragment() {
     private var sub: String? = null
+
+    private var subWordEdit: TextInputLayout? = null
 
     private lateinit var viewModelFactory: SrtFleContentViewModelFactory
     private lateinit var viewModel: SrtFileContentViewModel
 
     private val repository = SrtFileContentRepositoryImpl()
 
-    private var listener: OnSubtitleFragmentInteractionListener? = null
+    private var listener: OnSrtContentFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,17 +64,54 @@ class SubtitleFragment : Fragment() {
         })
     }
 
+    private fun String.toEditable(): Editable =  Editable.Factory.getInstance().newEditable(this)
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_srt_content, container, false)
+        val view = inflater.inflate(R.layout.fragment_srt_content, container, false)
+
+        subWordEdit = view.findViewById(R.id.sub_word_edit)
+        subWordEdit?.clearFocus()
+        subWordEdit?.error = null
+        setTextWatcher(subWordEdit!!)
+//        subWordEdit?.editText?.text = "hello motherfucker".toEditable()
+
+        return view
+    }
+
+    private fun setTextWatcher(til: TextInputLayout) {
+        val mTextWatcher: TextWatcher = object : TextWatcher {
+            override fun beforeTextChanged(
+                s: CharSequence,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                s: CharSequence,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
+                til.isErrorEnabled = s.length < 0
+                Log.d(TAG, s.toString())
+            }
+
+            override fun afterTextChanged(s: Editable) {}
+        }
+        if (til.editText != null) {
+            til.editText!!.addTextChangedListener(mTextWatcher)
+        }
     }
 
     companion object {
         @JvmStatic
         fun newInstance(subtitleFileName: String) =
-            SubtitleFragment().apply {
+            SrtContentFragment().apply {
                 arguments = Bundle().apply {
                     putString(SUBTITLE_FILE_NAME, subtitleFileName)
                 }
@@ -77,7 +120,7 @@ class SubtitleFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnSubtitleFragmentInteractionListener) {
+        if (context is OnSrtContentFragmentInteractionListener) {
             listener = context
         } else {
             throw RuntimeException("$context must implement OnFragmentInteractionListener")
@@ -89,7 +132,7 @@ class SubtitleFragment : Fragment() {
         listener = null
     }
 
-    interface OnSubtitleFragmentInteractionListener {
+    interface OnSrtContentFragmentInteractionListener {
         fun onFragmentInteraction()
     }
 }
