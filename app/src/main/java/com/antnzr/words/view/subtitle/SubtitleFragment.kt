@@ -1,21 +1,12 @@
 package com.antnzr.words.view.subtitle
 
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.TextPaint
 import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
-import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.text.clearSpans
 import androidx.fragment.app.Fragment
 import com.antnzr.words.MainApplication
 import com.antnzr.words.R
@@ -44,8 +35,7 @@ class SubtitleFragment : Fragment() {
         subView = view.findViewById(R.id.sub)
         subView.movementMethod = LinkMovementMethod.getInstance()
 
-        val contentHandler: SrtFileContentHandler =
-            SrtFileContentHandler()
+        val contentHandler: SrtFileContentHandler = SrtFileContentHandler()
         val content: ArrayList<Srt> =
             contentHandler.getSrtContent(MainApplication.applicationContext(), sub!!)
 

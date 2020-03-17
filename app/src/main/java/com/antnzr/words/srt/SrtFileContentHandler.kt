@@ -42,7 +42,6 @@ class SrtFileContentHandler {
 
     fun getSrtContent(context: Context, subName: String): ArrayList<Srt> {
         val repository: SubFilesRepository = LocalSubFilesRepository()
-
         val subFile: File? = repository.findSubtitle(context, subName)
 
         return read(subFile)
@@ -55,14 +54,12 @@ class SrtFileContentHandler {
             val sb: StringBuilder = StringBuilder()
 
             it.forEachLine { str ->
-
                 if (str.trim().isNotEmpty()) {
                     sb.append("$str\n")
                     return@forEachLine
                 }
 
                 parseSrt(sb)?.let { srt -> result.add(srt) }
-
                 sb.clear()
             }
         }
