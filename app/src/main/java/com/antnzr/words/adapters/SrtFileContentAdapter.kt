@@ -11,7 +11,8 @@ import com.antnzr.words.utils.RecyclerViewClickListener
 
 class SrtFileContentAdapter(
     private var srts: ArrayList<Srt>,
-    private val listener: RecyclerViewClickListener<String>
+    private val listener: RecyclerViewClickListener<Srt>,
+    private val wordListener: OnSrtTextClickListener
 ) :
     RecyclerView.Adapter<SrtFileContentAdapter.SrtFileContentViewHolder>() {
 
@@ -27,11 +28,16 @@ class SrtFileContentAdapter(
         holder.srtClickableText.setTextWithClickableWords(srts.elementAt(position).text)
 
         holder.srtClickableText.setOnClickListener {
-            holder.srtClickableText.word?.let { data -> listener.onClick(holder.srtClickableText, data) }
+            holder.srtClickableText.word?.let { data -> wordListener.onTextClick(holder.srtClickableText, data) }
+            listener.onClick(holder.srtClickableText, srts.elementAt(position))
         }
     }
 
     inner class SrtFileContentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val srtClickableText: ClickableTextView = view.findViewById(R.id.clickable_text)
+    }
+
+    interface OnSrtTextClickListener {
+        fun onTextClick(view: View, word: String)
     }
 }

@@ -84,8 +84,8 @@ class SrtFileContentRepositoryImpl :
                 val end: String = matcher.group(TIME_CODE_END_GROUP)
                 val text: String = matcher.group(TEXT_GROUP)
 //                    println("num: $num")
-//                    println("start: $start")
-//                    println("end: $end")
+                    println("start: $beginning")
+                    println("end: $end")
 //                    println("content: $content")
 
                 val timeCode: TimeCode = TimeCode(

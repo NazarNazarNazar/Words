@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.antnzr.words.R
 import com.antnzr.words.adapters.SrtFileContentAdapter
+import com.antnzr.words.data.Srt
 import com.antnzr.words.data.SrtFileContentRepositoryImpl
 import com.antnzr.words.utils.RecyclerViewClickListener
 import com.antnzr.words.utils.SUBTITLE_FILE_NAME
@@ -24,8 +25,10 @@ import kotlinx.android.synthetic.main.fragment_srt_content.*
 private val TAG = SrtContentFragment::class.java.simpleName
 
 class SrtContentFragment : Fragment(),
-    RecyclerViewClickListener<String> {
-    private var sub: String? = null
+    RecyclerViewClickListener<Srt> ,
+    SrtFileContentAdapter.OnSrtTextClickListener {
+
+    private var srtFileName: String? = null
 
     private var subWordEdit: TextInputLayout? = null
 
@@ -39,7 +42,7 @@ class SrtContentFragment : Fragment(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            sub = it.getString(SUBTITLE_FILE_NAME)
+            srtFileName = it.getString(SUBTITLE_FILE_NAME)
         }
     }
 
@@ -50,7 +53,7 @@ class SrtContentFragment : Fragment(),
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModelFactory = SrtFleContentViewModelFactory(repository, sub!!)
+        viewModelFactory = SrtFleContentViewModelFactory(repository, srtFileName!!)
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(SrtFileContentViewModel::class.java)
 
@@ -60,7 +63,7 @@ class SrtContentFragment : Fragment(),
             sub_text_recycler.also {
                 it.layoutManager = LinearLayoutManager(requireContext())
                 it.setHasFixedSize(true)
-                it.adapter = SrtFileContentAdapter(srts, this)
+                it.adapter = SrtFileContentAdapter(srts, this, this)
             }
         })
     }
@@ -75,7 +78,6 @@ class SrtContentFragment : Fragment(),
         subWordEdit?.clearFocus()
         subWordEdit?.error = null
         setTextWatcher(subWordEdit!!)
-//        subWordEdit?.editText?.text = "hello motherfucker".toEditable()
 
         return view
     }
@@ -108,10 +110,10 @@ class SrtContentFragment : Fragment(),
 
     companion object {
         @JvmStatic
-        fun newInstance(subtitleFileName: String) =
+        fun newInstance(srtFileName: String) =
             SrtContentFragment().apply {
                 arguments = Bundle().apply {
-                    putString(SUBTITLE_FILE_NAME, subtitleFileName)
+                    putString(SUBTITLE_FILE_NAME, srtFileName)
                 }
             }
     }
@@ -136,12 +138,17 @@ class SrtContentFragment : Fragment(),
 
     private fun String.toEditable(): Editable = Editable.Factory.getInstance().newEditable(this)
 
-    override fun onClick(view: View, data: String) {
-        val value: String? = data.replace("[\n\r]".toRegex(), " ")
-            .filter { it.isLetterOrDigit() || it.isWhitespace() } + " "
+    override fun onClick(view: View, data: Srt) {
+        println(data.timeCode.beginning)
+    }
 
+    override fun onTextClick(view: View, word: String) {
+        val value: String? = word
+            .replace("[\n\r]".toRegex(), " ")
+            .replace("(<.*?>)|(&.*?;)".toRegex(), "")
+            .replace("\\s{2,}".toRegex(), " ")+ " "
+//            .filter { it.isLetterOrDigit() || it.isWhitespace() }
 
         subWordEdit?.editText?.append(value)
     }
-
 }
