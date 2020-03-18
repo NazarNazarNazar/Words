@@ -1,16 +1,17 @@
 package com.antnzr.words.adapters
 
-import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.antnzr.words.R
 import com.antnzr.words.data.Srt
+import com.antnzr.words.srt.ClickableTextView
+import com.antnzr.words.utils.RecyclerViewClickListener
 
 class SrtFileContentAdapter(
-    private var srts: ArrayList<Srt>
+    private var srts: ArrayList<Srt>,
+    private val listener: RecyclerViewClickListener<String>
 ) :
     RecyclerView.Adapter<SrtFileContentAdapter.SrtFileContentViewHolder>() {
 
@@ -23,11 +24,14 @@ class SrtFileContentAdapter(
     override fun getItemCount(): Int = srts.size
 
     override fun onBindViewHolder(holder: SrtFileContentViewHolder, position: Int) {
-        holder.srtText.movementMethod = LinkMovementMethod.getInstance()
-        holder.srtText.text = srts.elementAt(position).spannableText
+        holder.srtClickableText.setTextWithClickableWords(srts.elementAt(position).text)
+
+        holder.srtClickableText.setOnClickListener {
+            holder.srtClickableText.word?.let { data -> listener.onClick(holder.srtClickableText, data) }
+        }
     }
 
     inner class SrtFileContentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val srtText: TextView = view.findViewById(R.id.text)
+        val srtClickableText: ClickableTextView = view.findViewById(R.id.clickable_text)
     }
 }

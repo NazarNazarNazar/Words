@@ -1,6 +1,9 @@
 package com.antnzr.words.data
 
 import android.content.Context
+import android.graphics.Rect
+import android.os.Bundle
+import android.text.Layout
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -15,6 +18,7 @@ import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import kotlin.collections.ArrayList
+
 
 private const val NUMBER_GROUP = 1
 private const val TIME_CODE_BEGINNING_GROUP = 2
@@ -111,7 +115,12 @@ class SrtFileContentRepositoryImpl :
                 override fun onClick(widget: View) {
                     widget as TextView
 
-                    println("Click on: [ $ss ]")
+                    val s = widget.text as Spanned
+                    val start = s.getSpanStart(this)
+                    val end = s.getSpanEnd(this)
+
+
+                    println("Click on: [ ${s.subSequence(start, end)} ]")
                 }
 
                 override fun updateDrawState(ds: TextPaint) {
@@ -128,7 +137,7 @@ class SrtFileContentRepositoryImpl :
         return ssb
     }
 
-    companion object {
+   /* companion object {
         fun makeSpannable(content: ArrayList<Srt>): SpannableStringBuilder {
             val ssb = SpannableStringBuilder()
 
@@ -158,7 +167,7 @@ class SrtFileContentRepositoryImpl :
 
             return ssb
         }
-    }
+    }*/
 }
 
 class ClickHandler(

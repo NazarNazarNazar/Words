@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.antnzr.words.R
 import com.antnzr.words.adapters.SrtFileContentAdapter
 import com.antnzr.words.data.SrtFileContentRepositoryImpl
+import com.antnzr.words.utils.RecyclerViewClickListener
 import com.antnzr.words.utils.SUBTITLE_FILE_NAME
 import com.antnzr.words.viewmodels.SrtFileContentViewModel
 import com.antnzr.words.viewmodels.SrtFleContentViewModelFactory
@@ -23,7 +23,8 @@ import kotlinx.android.synthetic.main.fragment_srt_content.*
 
 private val TAG = SrtContentFragment::class.java.simpleName
 
-class SrtContentFragment : Fragment() {
+class SrtContentFragment : Fragment(),
+    RecyclerViewClickListener<String> {
     private var sub: String? = null
 
     private var subWordEdit: TextInputLayout? = null
@@ -59,12 +60,10 @@ class SrtContentFragment : Fragment() {
             sub_text_recycler.also {
                 it.layoutManager = LinearLayoutManager(requireContext())
                 it.setHasFixedSize(true)
-                it.adapter = SrtFileContentAdapter(srts)
+                it.adapter = SrtFileContentAdapter(srts, this)
             }
         })
     }
-
-    private fun String.toEditable(): Editable =  Editable.Factory.getInstance().newEditable(this)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -98,7 +97,6 @@ class SrtContentFragment : Fragment() {
                 count: Int
             ) {
                 til.isErrorEnabled = s.length < 0
-                Log.d(TAG, s.toString())
             }
 
             override fun afterTextChanged(s: Editable) {}
@@ -135,4 +133,15 @@ class SrtContentFragment : Fragment() {
     interface OnSrtContentFragmentInteractionListener {
         fun onFragmentInteraction()
     }
+
+    private fun String.toEditable(): Editable = Editable.Factory.getInstance().newEditable(this)
+
+    override fun onClick(view: View, data: String) {
+        val value: String? = data.replace("[\n\r]".toRegex(), " ")
+            .filter { it.isLetterOrDigit() || it.isWhitespace() } + " "
+
+
+        subWordEdit?.editText?.append(value)
+    }
+
 }
